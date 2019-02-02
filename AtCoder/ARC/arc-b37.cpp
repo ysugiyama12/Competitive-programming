@@ -12,10 +12,8 @@ typedef long long ll;
 const ll MOD = 1e9 + 7;
 typedef pair<ll, ll> lpair;
 ll N,M;
-ll u[110], v[110];
-vector<ll> tree[110];
+ll u[10010], v[10010];
 ll parent[200010];
-ll is_check[110] = {};
 
 ll root(ll x){
     if(x == parent[x]){
@@ -38,9 +36,6 @@ bool same(ll a, ll b){
     return root(a) == root(b);
 }
 
-void check(ll cur, ll par){
-    if(is_check[cur] == 1)
-}
 
 int main(){
     cin.tie(0);
@@ -52,21 +47,31 @@ int main(){
     rep(i,0,M){
         cin >> u[i] >> v[i];
         u[i]--; v[i]--;
-        tree[u[i]].push_back(v[i]);
-        tree[v[i]].push_back(u[i]);
         unite(u[i], v[i]);
     }
-    memset(is_check,-1,sizeof(is_check));
+    map<ll, ll> mp1, mp2;
     rep(i,0,N){
-        if(is_check[i] == -1){
-            rep(j,0,N){
-                if(same(i,j)) is_check[j] = 0;
-                check(i, -1);
-            }
-
-        }
-
+        mp1[root(i)]++;
     }
+    rep(i,0,M){
+        mp2[root(u[i])]++;
+    }
+    ll ans = 0;
+    for(auto &e: mp1){
+        if(e.second == mp2[e.first] + 1){
+            ans++;
+        }
+    }
+    print(ans);
+    // memset(is_check,-1,sizeof(is_check));
+    // rep(i,0,N){
+    //     if(is_check[i] == -1){
+    //         rep(j,0,N){
+    //             if(same(i,j)) is_check[j] = 0;
+    //             check(i, -1);
+    //         }
+    //     }
+    // }
 
 
 }

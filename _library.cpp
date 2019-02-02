@@ -119,38 +119,29 @@ ll next_combination(ll sub) { //nCkの全列挙(bit)
     ll x = sub & -sub, y = sub + x;
     return (((sub & ~y) / x) >> 1LL) | y;
 }
-// nCkおよびnPkの全列挙
-// template <typename Iterator>
-// inline bool next_combination(const Iterator first, Iterator k, const Iterator last){
-//     /* Credits: Thomas Draper */
-//     // do{}while(next_combination(v.begin(),v.begin() + K,  v.end()));
-//     if ((first == last) || (first == k) || (last == k)) return false;
-//     Iterator itr1 = first;
-//     Iterator itr2 = last;
-//     ++itr1;
-//     if (last == itr1) return false;
-//     itr1 = k;
-//     --itr2;
-//     while (first != itr1){
-//         if (*--itr1 < *itr2){
-//             Iterator j = k;
-//             while (!(*itr1 < *j)) ++j;
-//             iter_swap(itr1,j);
-//             ++itr1;
-//             ++j;
-//             itr2 = k;
-//             rotate(itr1,j,last);
-//             while (last != j){
-//             ++j;
-//             ++itr2;
-//             }
-//             rotate(k,itr2,last);
-//             return true;
-//         }
-//     }
-//     rotate(first,k,last);
-//     return false;
-// }
+
+ll extGcd(ll a, ll b,ll &p, ll &q){
+    if(b == 0){
+        p = 1; q = 0; return a;
+    }
+    ll d = extGcd(b, a%b, q, p);
+    q -= a/b * p;
+    return d;
+}
+
+lpair ChineseRem(vector<ll> &b, vector<ll> &m){
+    ll r = 0, M = 1;
+    ll N = b.size();
+    rep(i,0,N){
+        ll p,q;
+        ll d = extGcd(M, m[i], p, q);
+        if((b[i] - r) % d != 0) return make_pair(0,-1);
+        ll tmp = (b[i] - r) / d * p % (m[i]/d);
+        r += M*tmp;
+        M *= m[i]/d;
+    }
+    return make_pair((r+M) % M, M);
+}
 
 vector<ll> decimal(ll x, ll n, ll sz){
     // 数xをn進数でsz桁

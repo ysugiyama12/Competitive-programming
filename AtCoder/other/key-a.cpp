@@ -15,4 +15,15 @@ typedef pair<ll, ll> lpair;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
+    ll n[4];
+    rep(i,0,4){
+        cin >> n[i];
+    }
+    sort(n, n+4);
+    if(n[0] == 1 && n[1] == 4 && n[2] == 7 && n[3] == 9){
+        print("YES");
+    }else{
+        print("NO");
+    }
+
 }
