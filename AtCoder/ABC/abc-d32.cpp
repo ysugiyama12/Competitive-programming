@@ -4,6 +4,7 @@
 #define printa(x,n) for(int i = 0; i < n; i++){ cout << (x[i]) << " ";} cout << endl;
 #define printa2(x,m,n) for(int i = 0; i < m; i++){ for(int j = 0; j < n; j++){ cout << x[i][j] << " ";} cout << endl;}
 #define printp(x,n) for(int i = 0; i < n; i++){ cout << "(" << x[i].first << ", " << x[i].second << ") "; } cout << endl;
+#define print2(x,y) cout << (x) << " " << (y) << endl;
 #define INF (1e18)
 using namespace std;
 typedef long long ll;
@@ -67,6 +68,57 @@ int main(){
             }
         }
         print(ans);
+    }else{ //半分全列挙
+        ll n = N/2;
+        ll n2 = N - n;
+        ll ans = 0;
+        vector<lpair> lp;
+        rep(bit,0,pow(2,n)){
+            ll w_sum = 0;
+            ll v_sum = 0;
+            rep(i,0,n){
+                if((bit>>i)&1){
+                    w_sum += w[i];
+                    v_sum += v[i];
+                }
+            }
+            if(w_sum > W) continue;
+            lp.push_back(make_pair(w_sum, v_sum));
+        }
+        sort(lp.begin(), lp.end());
+        ll max_v[100010] = {};
+        ll w_sorted[100010] = {};
+        rep(i,0,lp.size()){
+            max_v[i+1] = max(max_v[i], lp[i].second);
+            w_sorted[i] = lp[i].first;
+        }
+        // print("---");
+        // // print(lp.size());
+        // rep(i,0,lp.size()){
+        //     print2(lp[i].first, lp[i].second);
+        // }
+        // printa(max_v, lp.size());
+        // 10 20 30 40
+
+        rep(bit,0,pow(2,n2)){
+            ll w_sum = 0;
+            ll v_sum = 0;
+            rep(i,0,n2){
+                if((bit>>i) & 1){
+                    w_sum += w[i+n];
+                    v_sum += v[i+n];
+                }
+            }
+            // print(w_sum);
+            if(w_sum > W) continue;
+            ll wv = W - w_sum;
+            // print(wv);
+            ll pos = upper_bound(w_sorted, w_sorted + lp.size(), wv) - w_sorted;
+            ans = max(ans, v_sum + max_v[pos]);
+        }
+        print(ans);
+
+
     }
 }
 

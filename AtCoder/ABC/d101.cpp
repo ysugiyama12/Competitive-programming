@@ -1,94 +1,54 @@
 #include <bits/stdc++.h>
-#define rep(i, m, n) for(int i = m; i < (n); i++)
-#define print(x) cout << (x) << endl;
-#define printv(x) for(int i = 0; i < x.size(); i++){ cout << (x[i]) << " "; } cout << endl; 
-#define printa(x) for(int i = 0; i < (sizeof(x)/sizeof(x[0])); i++){ cout << (x[i]) << " ";} cout << endl;
-#define printaa(x) for(int i = 0; i < (sizeof(x)/sizeof(x[0])); i++){ for(int j = 0; j < (sizeof(x[0])/sizeof(x[0][0])); j++){ cout << x[i][j] << " ";} cout << endl;}
-#define INF (1e9)
-typedef long long ll;
-typedef struct{
-    int x;
-    int y;
-} P;
-
 using namespace std;
+typedef long long ll;
+typedef pair<ll, ll> lpair;
+const ll MOD = 1e9 + 7;
+#define rep(i,m,n) for(ll i = (m); i < (n); i++)
+#define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
+#define print(x) cout << (x) << endl;
+#define print2(x,y) cout << (x) << " " << (y) << endl;
+#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i == n-1];}
+#define INF (1e18)
+ll keta(ll n){
+    ll res = 0;
+    while(n > 0){
+        res += n % 10;
+        n /= 10;
+    }
+    return res;
+}
 
-int main(){
+int main(){   
     cin.tie(0);
     ios::sync_with_stdio(false);
-
-    int K;
+    ll K;
     cin >> K;
-    vector<ll> v;
-    rep(i,0,9){
-        v.push_back(i+1);
+    vector<ll> num;
+    rep(i,0,16){
+        rep(k,1,150){
+            if(i == 0 && k == 1) continue; 
+            num.push_back(k * pow(10,i) - 1);
+        }
     }
-    rep(i,0,9){
-        ll num = (i+1) * 10 + 9;
-        v.push_back(num);
-    }
-    rep(i,0,9){
-        ll num = (i+1) * 100 + 99;
-        v.push_back(num);
-    }
-    rep(i,4,16){
-        int max = 9 + (i-3)* 10;
-        
-        rep(j,10,max+1){
-            if(j <= 99){
-                ll num = (j+1) * pow(10,i-2) - 1;
-                v.push_back(num);
-            }else{
-                ll num = (j+1) * pow(10,i-3) - 1;
-                v.push_back(num);
+    sort(num.begin(), num.end());
+    unique(num.begin(), num.end());
+    // printa(num, num.size());
+    vector<ll> ans;
+    ll N = num.size();
+    rep(i,0,N){
+        // print(i);
+        bool ok = true;
+        rep(j,i+1,N){
+            double d1 = (double)num[i] / (double)keta(num[i]);
+            double d2 = (double)num[j] / (double)keta(num[j]);
+            // print2(d1,d2);
+            if(d1 > d2){
+                ok = false;
             }
         }
-        if(max <= 99){
-        ll tmp = (max+1) * pow(10,i-2) - 1;
-        tmp += pow(10,i-1);
-        while(tmp <= pow(10, i)){
-            v.push_back(tmp);
-            tmp += pow(10,i-1);
-        }
-        }else{
-                    ll tmp = (max+1) * pow(10,i-3) - 1;
-        tmp += pow(10,i-2);
-        while(tmp <= pow(10, i-1)){
-            v.push_back(tmp);
-            tmp += pow(10,i-2);
-        }
-        }
-
+        if(ok) ans.push_back(num[i]);
     }
-    sort(v.begin(), v.end());
-    unique(v.begin(), v.end());
     rep(i,0,K){
-        print(v[i]);
+        print(ans[i]);
     }
-
-    // int count[100001];
-    // rep(i,1,100001){
-    //     int cn = 0;
-    //     int n = i;
-    //     while(n > 0){
-    //         cn += n % 10;
-    //         n /= 10;
-
-    //     }
-    //     count[i] = cn;
-    // }
-    // rep(i,1,100001){
-    //     bool flg = true;
-    //     rep(j, i+1, 100001){
-    //         double n1 = double(i)/double(count[i]);
-    //         double n2 = double(j)/double(count[j]);
-    //         if(n1 >= n2){
-    //             flg = false;
-    //         }
-    //     }
-    //     if(flg){
-    //         print(i);
-    //     }
-    // }
-
 }

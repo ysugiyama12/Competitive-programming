@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
-#define rep(i, m, n) for(int i = m; i < (n); i++)
+typedef long long ll;
+#define rep(i,m,n) for(ll i = (m); i < (n); i++)
+#define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
 #define print(x) cout << (x) << endl;
-#define printa(x,n) for(int i = 0; i < n; i++){ cout << (x[i]) << " ";} cout << endl;
-#define printa2(x,m,n) for(int i = 0; i < m; i++){ for(int j = 0; j < n; j++){ cout << x[i][j] << " ";} cout << endl;}
-#define printp(x,n) for(int i = 0; i < n; i++){ cout << "(" << x[i].first << ", " << x[i].second << ") "; } cout << endl;
+#define print2(x,y) cout << (x) << " " << (y) << endl;
+#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i == n-1];}
+#define printp(x,n) for(ll i = 0; i < n; i++){ cout << "(" << x[i].first << ", " << x[i].second << ") "; } cout << endl;
 #define INF (1e18)
 using namespace std;
-typedef long long ll;
 const ll MOD = 1e9 + 7;
 typedef pair<ll, ll> lpair;
 
@@ -152,6 +153,79 @@ vector<ll> decimal(ll x, ll n, ll sz){
         idx++;
     }
     return v;
+}
+
+// Segment Tree(min)
+struct SegmentTree {
+private:
+    int n;
+    vector<ll> node;
+
+public:
+    SegmentTree(vector<ll> v){
+        ll sz = v.size();
+        n = 1; while(n < sz) n *= 2;
+        node.resize(2*n-1, INF);
+
+        rep(i,0,sz) node[i+n-1] = v[i];
+        rrep(i,n-2,0) node[i] = min(node[2*i+1], node[2*i+2]);
+    }
+
+    void update(ll x, ll val){
+        x += (n-1);
+        node[x] = val;
+        while(x > 0){
+            x = (x-1)/2;
+            node[x] = min(node[2*x+1], node[2*x+2]);
+        }
+    }
+
+    ll getMin(ll a, ll b, ll k = 0, ll l = 0, ll r = -1){
+        if(r < 0) r = n;
+        if(r <= a || b <= l) return INF;
+        if(a <= l && r <= b) return node[k];
+        ll vl = getMin(a, b, 2*k+1, l, (l+r)/2);
+        ll vr = getMin(a, b, 2*k+2, (l+r)/2, r);
+        return min(vl, vr);
+    }
+};
+
+//行列累乗
+typedef vector<ll> vec;
+typedef vector<vec> mat;
+mat mult(mat &A, mat &B){
+    mat C(A.size(), vec(B[0].size(),0));
+    rep(i,0,A.size()){
+        rep(k,0,B.size()){
+            rep(j,0,B[0].size()){
+                C[i][j] += A[i][k] * B[k][j];
+                C[i][j] %= MOD;
+            }
+        }
+    }
+    return C;
+}
+
+mat pow_mat(mat A, ll n){
+    if(n == 1) return A;
+    if(n % 2 == 0){
+        mat B = pow_mat(A, n/2);
+        return mult(B,B);
+    }else{
+        mat B = pow_mat(A, n-1);
+        return mult(A,B); 
+    }
+}
+
+void nibutan(){
+    ll v[5] = {1,3,5,7,9};
+    ll p = lower_bound(v, v+5, 0) - v; // 0
+    p = lower_bound(v, v+5, 2) - v; // 1
+    p = lower_bound(v, v+5, 3) - v; // 1
+    p = upper_bound(v, v+5, 2) - v; // 1
+    p = upper_bound(v, v+5, 3) - v; // 2
+    p = lower_bound(v, v+5, 10) - v; // 5
+
 }
 
 int main(){

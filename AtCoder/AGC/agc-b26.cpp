@@ -18,5 +18,14 @@ int main(){
     cin >> T;
     ll A[310], B[310], C[310], D[310];
     rep(i,0,T) cin >> A[i] >> B[i] >> C[i] >> D[i];
-    
+    rep(i,0,T){
+        ll v = A[i] - B[i];
+        if(v < 0){
+            print("No");
+            continue;
+        }
+        ll diff = D[i] - B[i];
+        
+    }
+
 }
