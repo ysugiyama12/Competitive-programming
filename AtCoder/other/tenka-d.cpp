@@ -11,6 +11,7 @@ using namespace std;
 const ll MOD = 1e9 + 7;
 typedef pair<ll, ll> lpair;
 
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);

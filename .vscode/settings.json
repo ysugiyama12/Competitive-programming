@@ -36,6 +36,9 @@
         "complex": "cpp",
         "__locale": "cpp",
         "functional": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "ostream": "cpp",
+        "iomanip": "cpp",
+        "numeric": "cpp"
     }
 }

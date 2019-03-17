@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <unordered_map>
 typedef long long ll;
 #define rep(i,m,n) for(ll i = (m); i < (n); i++)
 #define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
@@ -7,7 +6,7 @@ typedef long long ll;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i == n-1];}
 #define printp(x,n) for(ll i = 0; i < n; i++){ cout << "(" << x[i].first << ", " << x[i].second << ") "; } cout << endl;
-#define INF (1e18)
+#define INF (1e18 + 7)
 using namespace std;
 const ll MOD = 1e9 + 7;
 typedef pair<ll, ll> lpair;
@@ -15,7 +14,11 @@ typedef pair<ll, ll> lpair;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll a,d;
-    cin >> a >> d;
-    print(max((a+1)*d, (d+1)*a));
-}
+    string S;
+    cin >> S;
+    map<char,ll> mp;
+    rep(i,0,S.size()) mp[S[i]]++;
+    rep(i,0,6){
+        cout << mp['A'+i] << " \n"[i == 5];
+    }
+ }

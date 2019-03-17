@@ -50,49 +50,64 @@ inline vector<ll> factor(ll M){ //素因数分解
     return dd;
 }
 
-// nCk % MODのテーブル作成関数
-const ll max_N = 100000;
-ll fac[max_N + 10], facinv[max_N + 10];
+struct Combination{
+private:
+    ll N;
+    vector<ll> fac, facinv;
 
-ll power(ll x, ll n){ // xのn乗 % MOD
-    if(n == 0) return 1LL;
-    ll res = power(x * x % MOD, n/2);
-    if(n % 2 == 1) res = res * x % MOD;
-    return res;
-}
+public:
+    Combination(ll n){
+        N = n;
+        fac.push_back(1); fac.push_back(1);
+        rep(i,2,N+1) fac.push_back(fac[i-1] * i % MOD);
+        rep(i,0,N+1) facinv.push_back(power(fac[i], MOD-2));
+    }
+    ll power(ll x, ll n){
+        if(n == 0) return 1LL;
+        ll res = power(x * x % MOD, n/2);
+        if(n % 2 == 1) res = res * x % MOD;
+        return res;
+    }
+    ll nck(ll n, ll k){
+        if(k == 0 || n == k) return 1LL;
+        return fac[n] * facinv[k] % MOD * facinv[n-k] % MOD;
+    }
+    ll npk(ll n, ll k){
+        if(k == 0 || n == k) return 1LL;
+        return fac[n] * facinv[n-k] % MOD;
+    }
+    ll get(ll x){return fac[x];};
+    ll getinv(ll x){return facinv[x];};
+};
 
-ll nck(ll n, ll k){
-    if(k == 0 || n == k) return 1;
-    return fac[n] * facinv[k] % MOD * facinv[n-k] % MOD;
-}
+// Union-Find
+struct UnionFind {
+private:
+    ll N;
+    vector<ll> parent;
+    vector<ll> num;
 
-ll npk(ll n, ll k){
-    if(k == 0 || n == k) return 1;
-    return fac[n] * facinv[n-k] % MOD;
-}
-
-void comb_setup(){
-    fac[0] = 1; fac[1] = 1;
-    rep(i,2,max_N+1) fac[i] = (fac[i-1] * i) % MOD;
-    rep(i,0,max_N+1) facinv[i] = power(fac[i], MOD - 2);
-}
-
-ll parent[200010];
-
-ll root(ll x){
-    if(x == parent[x]) return x;
-    else return parent[x] = root(parent[x]);
-}
-
-void unite(ll a, ll b){
-    a = root(a); b = root(b);
-    if(a == b) return;
-    parent[a] = b;
-}
-
-bool same(ll a, ll b){
-    return root(a) == root(b);
-}
+public:
+    UnionFind(ll n){
+        N = n;
+        rep(i,0,N) parent.push_back(i);
+        rep(i,0,N) num.push_back(1);
+    }
+    ll root(ll x){
+        if(x == parent[x]) return x;
+        else return parent[x] = root(parent[x]);
+    }
+    void unite(ll a, ll b){
+        a = root(a); b = root(b);
+        if(a == b) return;
+        parent[a] = b;
+        ll sum = num[a] + num[b];
+        num[a] = sum;
+        num[b] = sum;
+    }
+    bool same(ll a, ll b){ return root(a) == root(b);}
+    ll sz(ll x){ return num[x];}
+};
 
 vector<string> split(string str, char del) { //文字列分割
     ll first = 0;
@@ -226,6 +241,34 @@ void nibutan(){
     p = upper_bound(v, v+5, 3) - v; // 2
     p = lower_bound(v, v+5, 10) - v; // 5
 
+}
+// 最長回文判定
+pair<ll, string> longest_palindrome(string text) {
+    ll n = text.size();
+    ll rad[2*n], i, j, k;
+    for (i = 0, j = 0; i < 2*n; i += k, j = max(j-k, 0LL)) {
+    while (i-j >= 0 && i+j+1 < 2*n && text[(i-j)/2] == text[(i+j+1)/2]) ++j;
+    rad[i] = j;
+    for (k = 1; i-k >= 0 && rad[i]-k >= 0 && rad[i-k] != rad[i]-k; ++k)
+        rad[i+k] = min(rad[i-k], rad[i]-k);
+    }
+    ll len = 0, idx = 0;
+    rep(i,0,2*n){
+        if(len < rad[i]){
+            len = rad[i];
+            idx = i;
+        }
+    }
+    string ss;
+    if(idx % 2 == 0){
+        idx /= 2;
+        ss = text.substr(idx - len/2, len);
+    }else{
+        idx /= 2;
+        ss = text.substr(idx - len/2+1, len);
+    }
+    return make_pair(len, ss);
+    //   return *max_element(rad, rad+2*n); // ret. centre of the longest palindrome
 }
 
 int main(){

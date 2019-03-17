@@ -7,67 +7,70 @@ const ll MOD = 1e9 + 7;
 #define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
 #define print(x) cout << (x) << endl;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
-#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i == n-1];}
+#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
 #define INF (1e18)
+
+struct Combination{
+private:
+    ll N;
+    vector<ll> fac, facinv;
+
+public:
+    Combination(ll n){
+        N = n;
+        fac.push_back(1); fac.push_back(1);
+        rep(i,2,N+1) fac.push_back(fac[i-1] * i % MOD);
+        rep(i,0,N+1) facinv.push_back(power(fac[i], MOD-2));
+    }
+    ll power(ll x, ll n){
+        if(n == 0) return 1LL;
+        ll res = power(x * x % MOD, n/2);
+        if(n % 2 == 1) res = res * x % MOD;
+        return res;
+    }
+    ll nck(ll n, ll k){
+        if(k == 0 || n == k) return 1LL;
+        return fac[n] * facinv[k] % MOD * facinv[n-k] % MOD;
+    }
+    ll npk(ll n, ll k){
+        if(k == 0 || n == k) return 1LL;
+        return fac[n] * facinv[n-k] % MOD;
+    }
+    ll get(ll x){return fac[x];};
+    ll getinv(ll x){return facinv[x];};
+};
 ll dp[1010][1010] = {};
-// nCk % MODのテーブル作成関数
-const ll max_N = 100000;
-ll fac[max_N + 10], facinv[max_N + 10];
 
-ll power(ll x, ll n){ // xのn乗 % MOD
-    if(n == 0) return 1LL;
-    ll res = power(x * x % MOD, n/2);
-    if(n % 2 == 1) res = res * x % MOD;
-    return res;
-}
-
-ll nck(ll n, ll k){
-    if(k == 0 || n == k) return 1;
-    return fac[n] * facinv[k] % MOD * facinv[n-k] % MOD;
-}
-
-ll npk(ll n, ll k){
-    if(k == 0 || n == k) return 1;
-    return fac[n] * facinv[n-k] % MOD;
-}
-
-void comb_setup(){
-    fac[0] = 1; fac[1] = 1;
-    rep(i,2,max_N+1) fac[i] = (fac[i-1] * i) % MOD;
-    rep(i,0,max_N+1) facinv[i] = power(fac[i], MOD - 2);
-}
-
-int main(){   
+int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
+    Combination comb(100010);
     ll N,A,B,C,D;
     cin >> N >> A >> B >> C >> D;
-    comb_setup();
-    dp[0][0] = 1;
-    rep(i,A,B+1){
-        rep(j,0,N+1){
-
-
+    dp[0][N] = 1;
+    ll val[1010] = {};
+    rep(i,0,1010){
+        val[i] = comb.power(i,MOD-2);
+    }
+    rrep(q,N,0){
+        rep(p,1,A){
+            dp[p][q] += dp[p-1][q];
+            dp[p][q] %= MOD;
+        }
+        rep(p,A,B+1){
+            dp[p][q] += dp[p-1][q]; //一つも作らない
+            dp[p][q] %= MOD;
+            ll v = dp[p-1][q];
+            for(int i = 1; i <= D && i <= q/p; i++){
+                v *= (comb.nck(q-(i-1)*p, p) * val[i]) % MOD;
+                v %= MOD;
+                if(i >= C){
+                    dp[p][q-i*p] += v;
+                    dp[p][q-i*p] %= MOD;
+                }
+            }
         }
     }
-    // rep(i,0,B){
-    //     rep(j,0,N+1){
-    //         dp[i+1][j] = dp[i][j]; //わけない
-    //         if(i >= A){
-    //             ll k = 1;
-    //             while(j + i*k <= N){
-    //                 dp[i][j] *= nck(N-j-i*(k-1), i) % MOD;
-    //                 dp[i][j] %= MOD;
-    //                 k++;
-    //             }
-    //         }
-    //     }
-    // }
-    // rep(i,0,B){
-    //     rep(j,0,N+1){
-    //         cout << dp[i][j] << " \n"[j == N];
-    //     }
-    // }
-    print(dp[B][N]);
-
+    print(dp[B][0]);
+    
 }

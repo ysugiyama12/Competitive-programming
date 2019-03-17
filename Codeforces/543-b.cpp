@@ -13,22 +13,20 @@ const ll MOD = 1e9 + 7;
 int main(){   
     cin.tie(0);
     ios::sync_with_stdio(false);
-    string S;
-    cin >> S;
-    ll N = S.size();
-    ll dp[100010][4] = {};
-    dp[0][0] = 1;
+    ll N;
+    cin >> N;
+    ll a[1010];
+    rep(i,0,N) cin >> a[i];
+    map<ll,ll> mp;
     rep(i,0,N){
-        rep(j,0,4){
-            if(S[i] == '?'){
-                dp[i+1][j] += 3 * dp[i][j];
-                if(j != 0) dp[i+1][j] += dp[i][j-1];
-            }else{
-                dp[i+1][j] += dp[i][j];
-                if(j != 0 && S[i] == "ABC"[j-1]) dp[i+1][j] += dp[i][j-1];
-            }
-            dp[i+1][j] %= MOD;
+        rep(j,0,N){
+            if(i == j)continue;
+            mp[a[i] + a[j]]++;
         }
     }
-    print(dp[N][3]);
+    ll ans = 0;
+    for(auto &e: mp){
+        ans = max(ans, e.second);
+    }
+    print(ans/2);
 }
