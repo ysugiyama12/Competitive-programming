@@ -9,29 +9,33 @@ const ll INF = 1e18;
 #define print(x) cout << (x) << endl;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
+ll dp[5010][5010] = {};
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    string S;
-    cin >> S;
-    ll N = S.size();
-    map<char,ll> mp;
-    ll kind = 0;
-    vector<ll> pos;
-    ll cnt = 0;
-    rrep(i,N-1,0){
-        if(mp[S[i]] == 0){
-            mp[S[i]] = 1;
-            kind++;
-        }
-        if(kind == 26){
-            rep(j,0,26) mp['a'+j] = 0;
-            kind = 0;
-            pos.push_back(i);
-            cnt++;
+    ll N,A,B;
+    cin >> N >> A >> B;
+    ll P[5010];
+    rep(i,0,N) cin >> P[i];
+    rep(i,0,N){
+        rep(j,0,N){
+            if(i == j){
+                dp[i][j] = 0;
+            }else{
+                dp[i][j] = INF;
+            }
         }
     }
-    print(cnt);
+    rep(lv,0,N){
+        rep(rv,0,N){
+            ll cnt = rv - lv + 1;
+            
+
+        }
+    }
+    
+    print(dp[0][N-1]);
 
     
 }

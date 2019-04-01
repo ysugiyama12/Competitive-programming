@@ -28,17 +28,13 @@ int main(){
     ll dist[20] = {};
     rep(i,1,N) dist[i] = INF;
     rep(i,0,N) pq.push(make_pair(dist[i], i));
-    ll is_visit[20] = {};
     while(!pq.empty()){
         lpair l1 = pq.top();
         pq.pop();
-        is_visit[l1.second] = 1;
         for(auto &e: tree[l1.second]){
             if(dist[e.first] > dist[l1.second] + e.second){
-                if(!is_visit[e.first]){
-                    dist[e.first] = dist[l1.second] + e.second;
-                    pq.push(make_pair(dist[e.first], e.first));
-                }
+                dist[e.first] = dist[l1.second] + e.second;
+                pq.push(make_pair(dist[e.first], e.first));
             }
         }
     }

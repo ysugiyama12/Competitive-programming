@@ -12,26 +12,18 @@ const ll INF = 1e18;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    string S;
-    cin >> S;
-    ll N = S.size();
-    map<char,ll> mp;
-    ll kind = 0;
-    vector<ll> pos;
-    ll cnt = 0;
+    ll N;
+    ll A[200010];
+    cin >> N;
+    rep(i,0,N) cin >> A[i];
+    ll ans = 0;
+    ll v = INF;
     rrep(i,N-1,0){
-        if(mp[S[i]] == 0){
-            mp[S[i]] = 1;
-            kind++;
+        if(v != 0){
+            v = min(v-1, A[i]);
         }
-        if(kind == 26){
-            rep(j,0,26) mp['a'+j] = 0;
-            kind = 0;
-            pos.push_back(i);
-            cnt++;
-        }
+        ans += v;
     }
-    print(cnt);
-
+    print(ans);
     
 }

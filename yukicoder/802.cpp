@@ -15,23 +15,13 @@ int main(){
     string S;
     cin >> S;
     ll N = S.size();
-    map<char,ll> mp;
-    ll kind = 0;
-    vector<ll> pos;
-    ll cnt = 0;
-    rrep(i,N-1,0){
-        if(mp[S[i]] == 0){
-            mp[S[i]] = 1;
-            kind++;
-        }
-        if(kind == 26){
-            rep(j,0,26) mp['a'+j] = 0;
-            kind = 0;
-            pos.push_back(i);
-            cnt++;
-        }
+    ll dp[100010] = {};
+    dp[0] = 1;
+    ll prev[30] = {};
+    rep(i,0,N){
+
     }
-    print(cnt);
+    print(dp[N]);
 
     
 }
