@@ -10,7 +10,23 @@ const ll INF = 1e18;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
 int main(){
-  cin.tie(0);
-  ios::sync_with_stdio(false);
-  
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    ll N,Q;
+    cin >> N >> Q;
+    char M[1010], C[1010];
+    ll I[1010];
+    string S;
+    cin >> S;
+    rep(i,0,Q){
+        cin >> M[i];
+        if(M[i] == '+'){
+            cin >> I[i] >> C[i];
+        }else{
+            cin >> I[i];
+        }
+    }
+    
+
+
 }

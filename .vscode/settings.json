@@ -50,5 +50,7 @@
         "sstream": "cpp",
         "streambuf": "cpp",
         "thread": "cpp"
-    }
+    },
+    "C_Cpp.intelliSenseCacheSize": 0,
+    "C_Cpp.errorSquiggles": "Disabled"
 }

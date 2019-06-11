@@ -10,7 +10,17 @@ const ll INF = 1e18;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
 int main(){
-  cin.tie(0);
-  ios::sync_with_stdio(false);
-  
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    ll R,G,B,N;
+    cin >> R >> G >> B >> N;
+    ll ans = 0;
+    rep(i,0,3001){
+        rep(j,0,3001){
+            ll v = N - i*R - j*G;
+            if(v >= 0 && v % B == 0) ans++;
+        }
+    }
+    print(ans);
+    
 }
