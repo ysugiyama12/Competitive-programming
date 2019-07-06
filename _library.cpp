@@ -327,6 +327,20 @@ pair<ll, string> longest_palindrome(string text) {
     //   return *max_element(rad, rad+2*n); // ret. centre of the longest palindrome
 }
 
+vector<ll> sieve(ll n){ //エラトステネス
+    vector<bool> is_prime(n+1);
+    vector<ll> prime;
+    rep(i,0,n+1) is_prime[i] = true;
+    is_prime[0] = is_prime[1] = false;
+    rep(i,2,n+1){
+        if(is_prime[i]){
+            prime.push_back(i);
+            for(int j = 2 * i; j <= n; j += i) is_prime[j] = false;
+        }
+    }
+    return prime;
+}
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
