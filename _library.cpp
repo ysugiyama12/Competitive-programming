@@ -341,6 +341,61 @@ vector<ll> sieve(ll n){ //エラトステネス
     return prime;
 }
 
+struct BIT { //1-indexed
+private:
+    int n,n2;
+    vector<ll> bit;
+
+public:
+    BIT(vector<ll> v){
+        n = v.size();
+        rep(i,0,n) bit.push_back(v[i]);
+        n2 = 1;
+        while(n2 * 2 <= n) n2 *= 2;
+    }
+
+    ll sum(ll i){
+        ll s = 0;
+        while(i > 0){
+            s += bit[i];
+            i -= i & -i;
+        }
+        return s;
+    }
+
+    void add(ll i, ll x){
+        while(i <= n){
+            bit[i] += x;
+            i += i & -i;
+        }
+    }
+    ll lower_bound(ll w) {
+        if (w <= 0) return 0;
+        ll x = 0;
+        for (ll k = n2; k > 0; k /= 2) {
+            if (x + k <= n && bit[x + k] < w) {
+                w -= bit[x + k];
+                x += k;
+            }
+        }
+        return x + 1;
+    }
+
+};
+
+vector<ll> compress(vector<ll> v){
+    ll n = v.size();
+    vector<ll> v2;
+    rep(i,0,n) v2.push_back(v[i]);
+    sort(v2.begin(), v2.end());
+    vector<ll> res;
+    rep(i,0,n){
+        ll pos = lower_bound(v2.begin(), v2.end(), v[i]) - v2.begin();
+        res.push_back(pos + 1); 
+    }
+    return res;
+}
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);

@@ -13,6 +13,7 @@ ll dp[16][1LL<<16];
 ll s[200], t[200], d[200];
  
 int main(){
+    // tsp: 巡回セールスマン
     cin.tie(0);
     ios::sync_with_stdio(false);
     ll N,M;

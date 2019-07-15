@@ -67,7 +67,7 @@ int main(){
         edge2 e = {x[i], y[i], i};
         lp.push_back(e);
     }
-    sort(lp.begin(), lp.end(), compx);
+    sort(lp.begin(), lp.end(), x);
     vector<edge> ee;
     rep(i,1,N-1){
         edge tt = {lp[i-1].idx, lp[i].idx, abs(lp[i-1].x - lp[i].x)};

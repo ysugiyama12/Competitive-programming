@@ -11,15 +11,13 @@ const ll INF = 1e18;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
 struct BIT { //1-indexed
 private:
-    int n,n2;
+    int n;
     vector<ll> bit;
 
 public:
     BIT(vector<ll> v){
         n = v.size();
         rep(i,0,n) bit.push_back(v[i]);
-        n2 = 1;
-        while(n2 * 2 <= n) n2 *= 2;
     }
 
     ll sum(ll i){
@@ -37,36 +35,41 @@ public:
             i += i & -i;
         }
     }
-    ll lower_bound(ll w) {
-        if (w <= 0) return 0;
-        ll x = 0;
-        for (ll k = n2; k > 0; k /= 2) {
-            if (x + k <= n && bit[x + k] < w) {
-                w -= bit[x + k];
-                x += k;
-            }
-        }
-        return x + 1;
-    }
-
 };
+
+vector<ll> compress(vector<ll> v){
+    ll n = v.size();
+    vector<ll> v2;
+    rep(i,0,n) v2.push_back(v[i]);
+    sort(v2.begin(), v2.end());
+    vector<ll> res;
+    rep(i,0,n){
+        ll pos = lower_bound(v2.begin(), v2.end(), v[i]) - v2.begin();
+        res.push_back(pos + 1); 
+    }
+    return res;
+}
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll Q;
-    cin >> Q;
-    ll T[200010], X[200010];
-    rep(i,0,Q) cin >> T[i] >> X[i];
-    vector<ll> t(200010, 0);
-    BIT bit(t);
-    rep(i,0,Q){
-        if(T[i] == 1){
-            bit.add(X[i], 1);
-        }else{
-            ll v = bit.lower_bound(X[i]);
-            print(v);
-            bit.add(v, -1);
-        }
+    ll N,K;
+    cin >> N >> K;
+    ll A[200010];
+    rep(i,0,N) cin >> A[i];
+    rep(i,0,N) A[i] -= K;
+    vector<ll> sum(N+1, 0);
+    rep(i,0,N) sum[i+1] = sum[i] + A[i];
+    vector<ll> sum_compress = compress(sum);
+    vector<ll> init(200010, 0);
+    BIT bit(init);
+    ll ans = 0;
+    rep(i,0,N+1){
+        ans += bit.sum(sum_compress[i]);
+        bit.add(sum_compress[i], 1);
     }
+    print(ans);
+
+
+    
 }
