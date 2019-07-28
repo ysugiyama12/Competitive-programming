@@ -1,4 +1,3 @@
-/*** author: yuji9511 ***/
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -13,15 +12,12 @@ const ll INF = 1e18;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll A,B;
-    cin >> A >> B;
-    if(B % 2 == 1){
-        if(A % 2 == 0){
-            print("Devil");
-        }else{
-            print("Angel");
-        }
-    }else{
-        
-    }
+    ll N,M;
+    cin >> N >> M;
+    ll A[200010], B[200010];
+    rep(i,0,N) cin >> A[i];
+    rep(i,0,M) cin >> B[i];
+    sort(A, A+N);
+    sort(B, B+M);
+    
 }

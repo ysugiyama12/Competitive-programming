@@ -9,13 +9,14 @@ const ll INF = 1e18;
 #define print(x) cout << (x) << endl;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
+ll N,M;
 typedef struct{
     ll to;
     ll cap;
     ll rev;
 } edge;
-vector<edge> G[110];
-bool used[110];
+vector<edge> G[1010];
+bool used[1010];
 
 ll dfs(ll v, ll t, ll f){
     if(v == t) return f;
@@ -37,29 +38,21 @@ ll dfs(ll v, ll t, ll f){
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll n,g,e;
-    cin >> n >> g >> e;
-    ll p[110], a[10010], b[10010];
-    rep(i,0,g) cin >> p[i];
-    rep(i,0,e){
-        cin >> a[i] >> b[i];
-        G[b[i]].push_back((edge){a[i], 1, G[a[i]].size()});
-        G[a[i]].push_back((edge){b[i], 0, G[b[i]].size()-1});
-        G[a[i]].push_back((edge){b[i], 1, G[b[i]].size()});
-        G[b[i]].push_back((edge){a[i], 0, G[a[i]].size()-1});
+    cin >> N >> M;
+    rep(i,0,M){
+        ll u,v,c;
+        cin >> u >> v >> c;
+        G[u].push_back((edge){v, c, G[v].size()});
+        G[v].push_back((edge){u, 0, G[u].size() - 1});
     }
-    rep(i,0,g){
-        G[p[i]].push_back((edge){n, 1, G[n].size()});
-        G[n].push_back((edge){p[i], 0, G[p[i]].size()-1});
-    }
-
     ll ans = 0;
     while(1){
         memset(used, 0, sizeof(used));
-        ll f = dfs(0, n, INF);
+        ll f = dfs(0, N-1, INF);
         if(f == 0) break;
         ans += f;
     }
     print(ans);
+
     
 }

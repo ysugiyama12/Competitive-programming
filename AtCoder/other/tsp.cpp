@@ -53,6 +53,10 @@ int main(){
     }else{
         print(ans);
     }
+    vector<ll> hoge;
+    for(&e: hoge){
+        
+    }
  
      
 }

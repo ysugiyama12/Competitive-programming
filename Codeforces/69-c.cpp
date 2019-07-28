@@ -1,4 +1,3 @@
-/*** author: yuji9511 ***/
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -9,19 +8,20 @@ const ll INF = 1e18;
 #define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
 #define print(x) cout << (x) << endl;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
-#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i==n-1];};
+#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll A,B;
-    cin >> A >> B;
-    if(B % 2 == 1){
-        if(A % 2 == 0){
-            print("Devil");
-        }else{
-            print("Angel");
-        }
-    }else{
-        
-    }
+    ll N, K;
+    cin >> N >> K;
+    ll A[300010];
+    rep(i,0,N) cin >> A[i];
+    ll diff[300010];
+    rep(i,0,N-1) diff[i] = A[i+1] - A[i];
+    sort(diff, diff+N-1);
+    ll ans = 0;
+    rep(i,0,N-K) ans += diff[i];
+    print(ans);
+
+    
 }
