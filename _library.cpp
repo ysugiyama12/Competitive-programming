@@ -357,14 +357,15 @@ private:
     vector<ll> bit;
 
 public:
-    BIT(vector<ll> v){
-        n = v.size();
-        rep(i,0,n) bit.push_back(v[i]);
+    BIT(ll N){
+        n = N;
+        bit.resize(n+1);
+        rep(i,0,n) bit[i+1] = 0;
         n2 = 1;
         while(n2 * 2 <= n) n2 *= 2;
     }
 
-    ll sum(ll i){
+    ll sum(ll i){ // [1, i]
         ll s = 0;
         while(i > 0){
             s += bit[i];
@@ -374,6 +375,7 @@ public:
     }
 
     void add(ll i, ll x){
+        if(i == 0) return;
         while(i <= n){
             bit[i] += x;
             i += i & -i;
@@ -390,7 +392,6 @@ public:
         }
         return x + 1;
     }
-
 };
 
 vector<ll> compress(vector<ll> v){
