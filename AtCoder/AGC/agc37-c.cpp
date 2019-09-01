@@ -15,19 +15,15 @@ int main(){
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    ll c[30010];
-    rep(i,0,N) cin >> c[i];
-    ll dp[30010];
-    fill(dp, dp+N, INF);
     rep(i,0,N){
-        ll pos = lower_bound(dp, dp+N, c[i]) - dp;
-        dp[pos] = c[i];
-    }
-    rrep(i,N-1,0){
-        if(dp[i] != INF){
-            print(N - (i+1));
-            return 0;
+        rep(j,0,N){
+            if(i % 2 == 0){
+                ll v = i / 2;
+                cout << v * 2 * N + 2 * j << " \n"[j==N-1];
+            }else{
+                ll v = i/2;
+                cout << v * 2 * N + 2 * j + 1 << " \n"[j==N-1];
+            }
         }
     }
-    
 }

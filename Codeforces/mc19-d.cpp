@@ -18,22 +18,28 @@ private:
 public:
     BIT(ll N){
         n = N;
-        bit.assign(n+1, 0);
+        bit.resize(n+1);
+        rep(i,0,n) bit[i+1] = 0;
         n2 = 1;
         while(n2 * 2 <= n) n2 *= 2;
     }
 
-    ll sum(ll x){ //[1, x]
-        ll res = 0;
-        for(ll i = x; i > 0; i -= i & -i) res += bit[i];
-        return res;
+    ll sum(ll i){ // [1, i]
+        ll s = 0;
+        while(i > 0){
+            s += bit[i];
+            i -= i & -i;
+        }
+        return s;
     }
 
-    void add(ll x, ll v){
-        if(x == 0) return;
-        for(ll i = x; i <= n; i += i & -i) bit[i] += v;
+    void add(ll i, ll x){
+        if(i == 0) return;
+        while(i <= n){
+            bit[i] += x;
+            i += i & -i;
+        }
     }
-
     ll lower_bound(ll w) {
         if (w <= 0) return 0;
         ll x = 0;
@@ -46,20 +52,22 @@ public:
         return x + 1;
     }
 };
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    ll a[100010];
-    rep(i,0,N) cin >> a[i];
-    BIT bit(100010);
-    ll ans = 0;
-    rep(i,0,N){
-        ans += bit.sum(a[i]);
-        bit.add(a[i],1);
+    ll s[200010];
+    rep(i,0,N) cin >> s[i];
+    BIT bit(200010);
+    rep(i,1,N+1) bit.add(i, i);
+    ll ans[200010] = {};
+    rrep(i,N-1,0){
+        ll pos = bit.lower_bound(s[i]+1);
+        bit.add(pos, -pos);
+        ans[i] = pos;
     }
-    ans = N*(N-1)/2 - ans;
-    print(ans);
+    printa(ans, N);
     
 }

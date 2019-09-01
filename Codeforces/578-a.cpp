@@ -15,19 +15,30 @@ int main(){
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    ll c[30010];
-    rep(i,0,N) cin >> c[i];
-    ll dp[30010];
-    fill(dp, dp+N, INF);
+    string S;
+    cin >> S;
+    ll ans[11] = {};
     rep(i,0,N){
-        ll pos = lower_bound(dp, dp+N, c[i]) - dp;
-        dp[pos] = c[i];
-    }
-    rrep(i,N-1,0){
-        if(dp[i] != INF){
-            print(N - (i+1));
-            return 0;
+        if(S[i] == 'L'){
+            rep(j,0,10){
+                if(ans[j] == 0){
+                    ans[j]++;
+                    break;
+                }
+            }
+        }else if(S[i] == 'R'){
+            rrep(j,9,0){
+                if(ans[j] == 0){
+                    ans[j]++;
+                    break;
+                }
+            }
+        }else{
+            ll num = S[i] - '0';
+            ans[num]--;
         }
     }
+    rep(i,0,10) cout << ans[i];
+    cout << endl;
     
 }

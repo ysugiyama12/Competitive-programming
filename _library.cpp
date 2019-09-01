@@ -359,28 +359,22 @@ private:
 public:
     BIT(ll N){
         n = N;
-        bit.resize(n+1);
-        rep(i,0,n) bit[i+1] = 0;
+        bit.assign(n+1, 0);
         n2 = 1;
         while(n2 * 2 <= n) n2 *= 2;
     }
 
-    ll sum(ll i){ // [1, i]
-        ll s = 0;
-        while(i > 0){
-            s += bit[i];
-            i -= i & -i;
-        }
-        return s;
+    ll sum(ll x){ //[1, x]
+        ll res = 0;
+        for(ll i = x; i > 0; i -= i & -i) res += bit[i];
+        return res;
     }
 
-    void add(ll i, ll x){
-        if(i == 0) return;
-        while(i <= n){
-            bit[i] += x;
-            i += i & -i;
-        }
+    void add(ll x, ll v){
+        if(x == 0) return;
+        for(ll i = x; i <= n; i += i & -i) bit[i] += v;
     }
+
     ll lower_bound(ll w) {
         if (w <= 0) return 0;
         ll x = 0;
@@ -406,6 +400,36 @@ vector<ll> compress(vector<ll> v){
     }
     return res;
 }
+
+struct BIT2D { //1-indexed
+private:
+    ll h,w;
+    vector< vector<ll> > dat;
+
+public:
+    BIT2D(ll H, ll W){
+        h = H; w = W;
+        dat.assign(h+10, vector<ll>(w+10, 0));
+    }
+
+    void update(ll x, ll y, ll v){
+        for(ll i = x; i <= h; i += i & -i) for( ll j = y; j <= w; j += j & -j) dat[i][j] += v;
+    }
+
+    ll qsum(ll x, ll y){
+        ll res = 0;
+        for(ll i = x; i > 0; i -= i & -i) for(ll j = y; j > 0; j -= j & -j) res += dat[ i ][ j ];
+        return res;
+    }
+
+    ll qsum(ll x0, ll y0, ll x1, ll y1){
+        return qsum(x1, y1) - qsum(x0-1, y1) - qsum(x1, y0-1) + qsum(x0-1, y0-1);
+    }
+
+    ll get(ll x, ll y){
+        return qsum(x, y, x, y);
+    }
+};
 
 int main(){
     cin.tie(0);

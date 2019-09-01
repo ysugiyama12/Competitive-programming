@@ -15,18 +15,12 @@ int main(){
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    ll c[30010];
-    rep(i,0,N) cin >> c[i];
-    ll dp[30010];
-    fill(dp, dp+N, INF);
+    ll x[2010], y[2010];
+    rep(i,0,N) cin >> x[i] >> y[i];
+    ll ei = 0, tyoku = 0, don = 0;
     rep(i,0,N){
-        ll pos = lower_bound(dp, dp+N, c[i]) - dp;
-        dp[pos] = c[i];
-    }
-    rrep(i,N-1,0){
-        if(dp[i] != INF){
-            print(N - (i+1));
-            return 0;
+        rep(j,0,N){
+            
         }
     }
     

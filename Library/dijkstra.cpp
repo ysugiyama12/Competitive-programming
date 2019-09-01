@@ -10,6 +10,14 @@ using namespace std;
 typedef long long ll;
 const ll MOD = 1e9 + 7;
 typedef pair<ll, ll> lpair;
+struct compare{
+    bool operator() (lpair l1, lpair l2){
+         if(l1.second == l2.second){
+             return l1.first < l2.first;
+         }
+         return l1.second < l2.second;
+    }
+};
 
 int main(){
     cin.tie(0);

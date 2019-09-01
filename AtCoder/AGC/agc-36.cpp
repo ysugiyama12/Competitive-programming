@@ -15,17 +15,18 @@ int main(){
     ll S;
     cin >> S;
     ll x1,y1,x2,y2,x3,y3;
-    if(S % 2 == 0){
-        ll t = S/2;
-        ll x1 = 0, y1 = 0;
-        x2 = t;
+    x1 = 0, y1 = 0;
+    if(S == 1e18){
+        x2 = 1e9;
         y2 = 0;
         x3 = 0;
-        y3 = t;
+        y3 = 1e9;
+    }else{
+        x2 = 1e9;
+        y2 = 1;
+        x3 = 1e9 - (S % (ll)1e9);
+        y3 = (S + x3) / (ll)1e9;
     }
-    ll v = sqrt(S);
-    print(v);
-    print(S - v*v);
-
+    cout << x1 << " " << y1 << " " << x2 << " " << y2 << " " << x3 << " " << y3 << endl;
     
 }

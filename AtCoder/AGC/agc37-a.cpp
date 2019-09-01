@@ -13,21 +13,31 @@ const ll INF = 1e18;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N;
-    cin >> N;
-    ll c[30010];
-    rep(i,0,N) cin >> c[i];
-    ll dp[30010];
-    fill(dp, dp+N, INF);
+    string S;
+    cin >> S;
+    string t = "";
+    // string t2 = "";
+    // S += '$';
+    ll N = S.size();
+    // print(N);
+    ll ans = 0;
+    string now = "";
     rep(i,0,N){
-        ll pos = lower_bound(dp, dp+N, c[i]) - dp;
-        dp[pos] = c[i];
-    }
-    rrep(i,N-1,0){
-        if(dp[i] != INF){
-            print(N - (i+1));
-            return 0;
+        string s = S.substr(i,1);
+        now += s;
+        // print(now);
+        if(now == t){
+            // now += s;
+        }else{
+            t = now;
+            now = "";
+            ans++;
+            // print(i);
         }
+        // print2(i,t);
     }
+    // if(t.size() != 1) ans++;
+    print(ans);
+
     
 }
