@@ -13,16 +13,24 @@ const ll INF = 1e18;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    // ll W,H;
-    // cin >> W >> H;
-    // ll N;
-    // cin >> N;
-    // ll X[35], Y[35];
-    // rep(i,0,N) cin >> X[i] >> Y[i];
-    ll x = 1, y = 4;
-    ll res = x+++y++;
-    print2(x,y);
-    print(res);
-
+    ll T;
+    cin >> T;
+    while(T--){
+        ll S,I,E;
+        cin >> S >> I >> E;
+        ll lv = -1, rv = E+1;
+        while(rv - lv > 1){
+            ll mid = (rv + lv) / 2;
+            ll amari = E - mid;
+            ll ss = S + mid;
+            ll ii = I + amari;
+            if(ss > ii){
+                rv = mid;
+            }else{
+                lv = mid;
+            }
+        }
+        print(E - rv + 1);
+    }
     
 }

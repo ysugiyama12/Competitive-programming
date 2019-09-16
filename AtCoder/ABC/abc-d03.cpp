@@ -1,72 +1,60 @@
+/*** author: yuji9511 ***/
 #include <bits/stdc++.h>
-#define rep(i, m, n) for(int i = m; i < (n); i++)
-#define rrep(i,m,n) for(int i = m; i >= n; i--)
-#define print(x) cout << (x) << endl;
-#define print2(x,y) cout << (x) << " " << (y) << endl;
-#define printa(x,n) for(int i = 0; i < n; i++){ cout << (x[i]) << " ";} cout << endl;
-#define printa2(x,m,n) for(int i = 0; i < m; i++){ for(int j = 0; j < n; j++){ cout << x[i][j] << " ";} cout << endl;}
-#define printp(x,n) for(int i = 0; i < n; i++){ cout << "(" << x[i].first << ", " << x[i].second << ") "; } cout << endl;
-#define INF (1e18)
 using namespace std;
 typedef long long ll;
-const ll MOD = 1e9 + 7;
-typedef struct{
-    ll to;
-    ll cost;
-} edge;
 typedef pair<ll, ll> lpair;
-const ll max_N = 1000;
-ll fac[max_N + 1000], facinv[max_N + 1000];
+const ll MOD = 1e9 + 7;
+const ll INF = 1e18;
+#define rep(i,m,n) for(ll i = (m); i < (n); i++)
+#define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
+#define print(x) cout << (x) << endl;
+#define print2(x,y) cout << (x) << " " << (y) << endl;
+#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i==n-1];};
+struct Combination{
+private:
+    ll N;
+    vector<ll> fac, facinv;
 
-ll power(ll x, ll n){ // xのn乗 % MOD
-    if(n == 0) return 1LL;
-    ll res = power(x * x % MOD, n/2);
-    if(n % 2 == 1){
-        res = res * x % MOD;
+public:
+    Combination(ll n){
+        N = n;
+        fac.push_back(1); fac.push_back(1);
+        rep(i,2,N+1) fac.push_back(fac[i-1] * i % MOD);
+        rep(i,0,N+1) facinv.push_back(power(fac[i], MOD-2));
     }
-    return res;
-}
-
-ll nck(ll n, ll k){
-    if(k == 0 || n == k){
-        return 1;
+    ll power(ll x, ll n){
+        if(n == 0) return 1LL;
+        ll res = power(x * x % MOD, n/2);
+        if(n % 2 == 1) res = res * x % MOD;
+        return res;
     }
-    return fac[n] * facinv[k] % MOD * facinv[n-k] % MOD;
-}
-
-ll npk(ll n, ll k){
-    if(k == 0 || n == k){
-        return 1;
+    ll nck(ll n, ll k){
+        if(k == 0 || n == k) return 1LL;
+        return fac[n] * facinv[k] % MOD * facinv[n-k] % MOD;
     }
-    return fac[n] * facinv[n-k] % MOD;
-}
-
-void comb_setup(){
-    fac[0] = 0;
-    fac[1] = 1;
-    rep(i,2,max_N){
-        fac[i] = (fac[i-1] * i) % MOD;
+    ll npk(ll n, ll k){
+        if(k == 0 || n == k) return 1LL;
+        return fac[n] * facinv[n-k] % MOD;
     }
-    rep(i,0,max_N){
-        facinv[i] = power(fac[i], MOD - 2);
-    }
-}
+    ll get(ll x){return fac[x];};
+    ll getinv(ll x){return facinv[x];};
+};
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll R,C;
-    ll X,Y;
-    ll D,L;
-    cin >> R >> C;
-    cin >> X >> Y;
-    cin >> D >> L;
-    if(D+L != X*Y) return 0;
+    ll R,C,X,Y,D,L;
+    cin >> R >> C >> X >> Y >> D >> L;
+    Combination cb(1010);
     ll ans = 0;
-    ans = (R - X + 1) * (C - Y + 1);
-    comb_setup();
-    ans *= nck(D+L, L) % MOD;
-    print(ans % MOD);
+    ans += cb.nck(X*(Y-1), D+L) * 2 % MOD + cb.nck((X-1)*Y, D+L) * 2 % MOD;
+    ans %= MOD;
+    ans -= cb.nck((X-1) * (Y-1), D+L) * 4;
 
 
+
+    // ll ans = (R - X + 1) * (C - Y + 1) % MOD;
+    // ans *= cb.nck(D+L, L);
+    // ans %= MOD;
+    // print(ans);
 }

@@ -13,16 +13,23 @@ const ll INF = 1e18;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    // ll W,H;
-    // cin >> W >> H;
-    // ll N;
-    // cin >> N;
-    // ll X[35], Y[35];
-    // rep(i,0,N) cin >> X[i] >> Y[i];
-    ll x = 1, y = 4;
-    ll res = x+++y++;
-    print2(x,y);
-    print(res);
-
+    ll N;
+    cin >> N;
+    ll a[110];
+    rep(i,0,N) cin >> a[i];
+    sort(a, a+N);
+    ll ans = 0;
+    ll check[110] = {};
+    rep(i,0,N){
+        if(check[i] == 1) continue;
+        check[i] = 1;
+        ans++;
+        rep(j,i+1,N){
+            if(check[j] == 0 && a[j] % a[i] == 0){
+                check[j] = 1;
+            }
+        }
+    }
+    print(ans);
     
 }

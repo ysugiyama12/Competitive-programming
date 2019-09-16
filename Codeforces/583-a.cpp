@@ -13,16 +13,16 @@ const ll INF = 1e18;
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    // ll W,H;
-    // cin >> W >> H;
-    // ll N;
-    // cin >> N;
-    // ll X[35], Y[35];
-    // rep(i,0,N) cin >> X[i] >> Y[i];
-    ll x = 1, y = 4;
-    ll res = x+++y++;
-    print2(x,y);
-    print(res);
+    ll N,D,E;
+    cin >> N >> D >> E;
+    E *= 5;
+    ll v = N / E;
+    ll ans = INF;
+    rep(i,0,v+1){
+        ll m = N - E*i;
+        m %= D;
+        ans = min(ans, m);
+    }
+    print(ans);
 
-    
 }

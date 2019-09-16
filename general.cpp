@@ -10,56 +10,43 @@ const ll INF = 1e18;
 #define print(x) cout << (x) << endl;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i==n-1];};
-struct BIT { //1-indexed
-private:
-    int n,n2;
-    vector<ll> bit;
-
-public:
-    BIT(ll N){
-        n = N;
-        bit.assign(n+1, 0);
-        n2 = 1;
-        while(n2 * 2 <= n) n2 *= 2;
-    }
-
-    ll sum(ll x){ //[1, x]
-        ll res = 0;
-        for(ll i = x; i > 0; i -= i & -i) res += bit[i];
-        return res;
-    }
-
-    void add(ll x, ll v){
-        if(x == 0) return;
-        for(ll i = x; i <= n; i += i & -i) bit[i] += v;
-    }
-
-    ll lower_bound(ll w) {
-        if (w <= 0) return 0;
-        ll x = 0;
-        for (ll k = n2; k > 0; k /= 2) {
-            if (x + k <= n && bit[x + k] < w) {
-                w -= bit[x + k];
-                x += k;
-            }
+vector< ll > z_algorithm(const string &s) {
+    vector< ll > prefix(s.size());
+    for(ll i = 1, j = 0; i < s.size(); i++) {
+        if(i + prefix[i - j] < j + prefix[j]) {
+            prefix[i] = prefix[i - j];
+        }else{
+            ll k = max(0LL, j + prefix[j] - i);
+            while(i + k < s.size() && s[k] == s[i + k]) ++k;
+            prefix[i] = k;
+            j = i;
         }
-        return x + 1;
     }
-};
+  prefix[0] = (ll) s.size();
+  return prefix;
+}
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    ll a[100010];
-    rep(i,0,N) cin >> a[i];
-    BIT bit(100010);
+    string S;
+    cin >> S;
+    ll ns = S.size();
     ll ans = 0;
-    rep(i,0,N){
-        ans += bit.sum(a[i]);
-        bit.add(a[i],1);
+    rep(i,0,ns){
+        string st = S.substr(i, ns-i) + '$' + S;
+        // print(st);
+        vector<ll> za = z_algorithm(S.substr(i, ns-i) + '$' + S);
+        rep(k,ns-i+1, ns-i+1+ns){
+            ll p1 = i, p2 = k - (ns-i+1);
+            if(p1 == p2) continue;
+            if(abs(p1-p2) < za[k]) continue;
+            ans = max(ans, za[k]);
+        }
     }
-    ans = N*(N-1)/2 - ans;
     print(ans);
+
     
 }
