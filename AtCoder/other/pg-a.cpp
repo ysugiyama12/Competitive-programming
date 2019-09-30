@@ -8,12 +8,21 @@ const ll INF = 1e18;
 #define rep(i,m,n) for(ll i = (m); i < (n); i++)
 #define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i==n-1];};
-void print() {}
-template <class H,class... T>
-void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+#define print(x) cout << (x) << endl;
+#define print2(x, y) cout << (x) << " " << (y) << endl;
 
 int main(){
-	cin.tie(0);
-	ios::sync_with_stdio(false);
-
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    ll N,K;
+    cin >> N >> K;
+    ll A[200010];
+    rep(i,0,N) cin >> A[i];
+    ll ans = 0;
+    rep(i,0,N){
+        if(A[i] > K) ans += (A[i] - K);
+    }
+    print(ans);
+    
 }
+

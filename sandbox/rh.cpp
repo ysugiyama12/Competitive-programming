@@ -16,6 +16,7 @@ struct HashData {
 	bool operator==(const HashData& rhs) const {
 		return h1 == rhs.h1 && h2 == rhs.h2;
 	}
+	
 	bool operator!=(const HashData& rhs) const { return !(*this == rhs); }
 };
 
@@ -53,10 +54,6 @@ public:
 	HashData get(int l, int r) const {
 		return (HashData){ rh1.get(l, r), rh2.get(l, r) };
 	}
-
-	lpair getPair(int l, int r) const {
-		return make_pair(rh1.get(l,r) , rh2.get(l, r));
-	}
 	// [l1, r1), [l2, r2)
 	int lcp(const RollingHash & rhs, int l1, int r1, int l2, int r2) const {
 		int lb = 0, ub = std::min(r1 - l1, r2 - l2) + 1;
@@ -68,18 +65,36 @@ public:
 	}
 };
 
-
-// verify: http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_14_B&lang=jp
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    string T,P;
-    cin >> T >> P;
-    RollingHash r1(T), r2(P);
-    ll nt = T.size(), np = P.size();
-    rep(i,0,nt){
-        if(r1.get(i, i+np) == r2.get(0, np)){
-            print(i);
-        }
-    }
+    string S;
+    cin >> S;
+    RollingHash rh(S);
+    ll M;
+    cin >> M;
+    string C[5010];
+    rep(i,0,M) cin >> C[i];
+	vector<HashData> v[11];
+	rep(i,0,M){
+		RollingHash rh2(C[i]);
+		HashData d = rh2.get(0, C[i].size());
+		v[C[i].size()].push_back(d);
+	}
+	ll N = S.size();
+	ll ans = 0;
+	rep(i,0,N){
+		rep(k,1,11){
+			HashData d1 = rh.get(i,i+k);
+			for(auto &e: v[k]){
+				if(d1 == e){
+					ans++;
+					break;
+				}
+			}
+		}
+	}
+	print(ans);
+
+    
 }

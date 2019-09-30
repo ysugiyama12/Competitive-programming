@@ -72,43 +72,6 @@ vector<ll> decimal(ll x, ll n, ll sz){
     return v;
 }
 
-//行列累乗
-typedef vector<ll> vec;
-typedef vector<vec> mat;
-mat mult(mat &A, mat &B){
-    mat C(A.size(), vec(B[0].size(),0));
-    rep(i,0,A.size()){
-        rep(k,0,B.size()){
-            rep(j,0,B[0].size()){
-                C[i][j] += A[i][k] * B[k][j];
-                C[i][j] %= MOD;
-            }
-        }
-    }
-    return C;
-}
-
-mat pow_mat(mat A, ll n){
-    if(n == 1) return A;
-    if(n % 2 == 0){
-        mat B = pow_mat(A, n/2);
-        return mult(B,B);
-    }else{
-        mat B = pow_mat(A, n-1);
-        return mult(A,B); 
-    }
-}
-
-void nibutan(){
-    ll v[5] = {1,3,5,7,9};
-    ll p = lower_bound(v, v+5, 0) - v; // 0
-    p = lower_bound(v, v+5, 2) - v; // 1
-    p = lower_bound(v, v+5, 3) - v; // 1
-    p = upper_bound(v, v+5, 2) - v; // 1
-    p = upper_bound(v, v+5, 3) - v; // 2
-    p = lower_bound(v, v+5, 10) - v; // 5
-
-}
 // 最長回文判定
 pair<ll, string> longest_palindrome(string text) {
     ll n = text.size();
@@ -163,6 +126,44 @@ vector<ll> compress(vector<ll> v){
         res.push_back(pos + 1); 
     }
     return res;
+}
+
+bool isSquare(ll x){
+	ll lv = 0, rv = x+1;
+	while(rv - lv > 1){
+		ll mid = (lv + rv) / 2;
+		if(mid >= 1e9){
+			rv = mid;
+		}else if(mid * mid >= x){
+			rv = mid;
+		}else{
+			lv = mid;
+		}
+	}
+	if(rv * rv == x){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+bool isCube(ll x){
+	ll lv = 0, rv = x+1;
+	while(rv - lv > 1){
+		ll mid = (lv + rv) / 2;
+		if(mid >= 1e6){
+			rv = mid;
+		}else if(mid * mid * mid >= x){
+			rv = mid;
+		}else{
+			lv = mid;
+		}
+	}
+	if(rv * rv * rv == x){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 int main(){

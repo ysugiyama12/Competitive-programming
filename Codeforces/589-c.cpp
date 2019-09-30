@@ -7,10 +7,10 @@ const ll MOD = 1e9 + 7;
 const ll INF = 1e18;
 #define rep(i,m,n) for(ll i = (m); i < (n); i++)
 #define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
-#define print(x) cout << (x) << endl;
-#define print2(x,y) cout << (x) << " " << (y) << endl;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i==n-1];};
-
+void print() {}
+template <class Head, class... Tail>
+void print(Head&& head, Tail&&... tail){ cout << head << " \n"[sizeof...(tail) == 0]; print(forward<Tail>(tail)...);}
 struct Integer{
 public:
 
@@ -75,9 +75,44 @@ public:
     }
 };
 
+ll power(ll x, ll n){
+    if(n == 0) return 1LL;
+    ll res = power(x * x % MOD, n/2);
+    if(n % 2 == 1) res = res * x % MOD;
+    return res;
+}
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
+    ll x,n;
+    cin >> x >> n;
     Integer it;
+    vector<ll> dd = it.divisor(x);
+    vector<ll> prime;
+    for(auto &e: dd){
+        if(it.isPrime(e)) prime.push_back(e);
+    }
+    ll ans = 1;
+    //1 2 3 4 5 6 7 8 9 10
+    // 1 2
+    for(auto &e: prime){
+        ll v = e;
+        ll num = 0;
+        while(1){
+            ll num = n / v;
+            if(num == 0) break;
+            ans *= power(e, num);
+            ans %= MOD;
+            double d = (double)v * (double)e;
+            if(d >= 9e18) break;
+            v *= e;
+        }
+    }
+    print(ans);
+
+
+
+
     
 }
