@@ -30,6 +30,10 @@ public:
         return res;
     }
 
+    ll sum(ll lv, ll rv){ // [lv, rv)
+        return sum(rv-1) - sum(lv);
+    }
+
     void add(ll x, ll v){
         if(x == 0) return;
         for(ll i = x; i <= n; i += i & -i) bit[i] += v;
@@ -51,8 +55,17 @@ public:
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
+    ll N;
+    cin >> N;
+    ll a[100010];
+    rep(i,0,N) cin >> a[i];
     BIT bit(100010);
-    rep(i,0,10) bit.add(i+1, i+1);
-    print(bit.sum(10));
+    ll ans = 0;
+    rep(i,0,N){
+        ans += bit.sum(0, a[i]);
+        bit.add(a[i], 1);
+    }
+    ans = N*(N-1) / 2 - ans;
+    print(ans);
     
 }

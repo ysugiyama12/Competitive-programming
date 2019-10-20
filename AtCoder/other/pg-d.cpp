@@ -17,53 +17,6 @@ typedef struct {
     ll idx;
 } P;
 
-bool comp(P p1, P p2){
-    if(p1.x == p2.x){
-        if(p1.y == p2.y){
-            return p1.z > p2.z;
-        }
-        return p1.y > p2.y; 
-    }
-    return p1.x < p2.x;
-}
-
-struct BIT { //1-indexed
-private:
-    int n,n2;
-    vector<ll> bit;
-
-public:
-    BIT(ll N){
-        n = N;
-        bit.assign(n+1, 0);
-        n2 = 1;
-        while(n2 * 2 <= n) n2 *= 2;
-    }
-
-    ll sum(ll x){ //[1, x]
-        ll res = 0;
-        for(ll i = x; i > 0; i -= i & -i) res += bit[i];
-        return res;
-    }
-
-    void add(ll x, ll v){
-        if(x == 0) return;
-        for(ll i = x; i <= n; i += i & -i) bit[i] += v;
-    }
-
-    ll lower_bound(ll w) {
-        if (w <= 0) return 0;
-        ll x = 0;
-        for (ll k = n2; k > 0; k /= 2) {
-            if (x + k <= n && bit[x + k] < w) {
-                w -= bit[x + k];
-                x += k;
-            }
-        }
-        return x + 1;
-    }
-};
-
 struct SegmentTree {
 private:
     int n;
@@ -98,44 +51,43 @@ public:
     }
 };
 
+vector<ll> compress(vector<ll> x, ll n){
+	vector<ll> v;
+	v.push_back(-INF); v.push_back(INF);
+	rep(i,0,n) v.push_back(x[i]);
+	sort(v.begin(), v.end());
+	v.erase(unique(v.begin(), v.end()), v.end());
+	vector<ll> res;
+	rep(i,0,n) res.push_back(lower_bound(v.begin(), v.end(), x[i]) - v.begin());
+	return res;
+}
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    ll x[100010], y[100010], z[100010];
+    vector<ll> x(N), y(N), z(N);
     rep(i,0,N) cin >> x[i] >> y[i] >> z[i];
-    vector<ll> X,Y,Z;
-    X.push_back(0);
-    Y.push_back(0);
-    Z.push_back(0);
-    rep(i,0,N){
-        X.push_back(x[i]);
-        Y.push_back(y[i]);
-        Z.push_back(z[i]);
-    }
-    X.push_back(INF);
-    Y.push_back(INF);
-    Z.push_back(INF);
-    sort(X.begin(), X.end());
-    sort(Y.begin(), Y.end());
-    sort(Z.begin(), Z.end());
-
-    X.erase(unique(X.begin(), X.end()), X.end());
-    Y.erase(unique(Y.begin(), Y.end()), Y.end());
-    Z.erase(unique(Z.begin(), Z.end()), Z.end());
-    rep(i,0,N){
-        x[i] = lower_bound(X.begin(), X.end(), x[i]) - X.begin();
-        y[i] = lower_bound(Y.begin(), Y.end(), y[i]) - Y.begin();
-        z[i] = lower_bound(Z.begin(), Z.end(), z[i]) - Z.begin();
-    }
-
+    x = compress(x, N);
+    y = compress(y, N);
+    z = compress(z, N);
 
     vector<P> za;
     rep(i,0,N){
         za.push_back((P){x[i], y[i], z[i], i});
     }
-    sort(za.begin(), za.end(), comp);
+
+    sort(za.begin(), za.end(), [](P p1, P p2){
+        if(p1.x == p2.x){
+            if(p1.y == p2.y){
+                return p1.z > p2.z;
+            }
+            return p1.y > p2.y; 
+        }
+        return p1.x < p2.x;
+    });
+
     SegmentTree sg(vector<ll>(100010, INF));
     ll ans[100010] = {};
 
@@ -148,11 +100,6 @@ int main(){
         }
         ll now_val = sg.getMin(za[i].y, za[i].y+1);
         sg.update(za[i].y, min(za[i].z, now_val));
-        // ll now_val = sg.getMin(za[i].y, za[i].y+1);
-        // ll diff = za[i].z - now_val;
-        // if(diff < 0){
-        //     sg.update(za[i].y, diff);
-        // }
     }
     rep(i,0,N){
         if(ans[i] == 1){
@@ -161,6 +108,4 @@ int main(){
             print("No");
         }
     }
-
-    
 }

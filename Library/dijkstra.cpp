@@ -12,6 +12,7 @@ const ll MOD = 1e9 + 7;
 typedef pair<ll, ll> lpair;
 struct compare{
     bool operator() (lpair l1, lpair l2){
+        // be careful of the opetator!
          if(l1.second == l2.second){
              return l1.first < l2.first;
          }
@@ -33,6 +34,7 @@ int main(){
         tree[q[i]].push_back(make_pair(p[i], c[i]));
     }
     priority_queue<lpair, vector<lpair> ,greater<lpair> > pq;
+    // priority_queue<lpair, vector<lpair> ,compare > pq;
     ll dist[20] = {};
     rep(i,1,N) dist[i] = INF;
     rep(i,0,N) pq.push(make_pair(dist[i], i));

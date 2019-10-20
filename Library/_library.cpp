@@ -115,18 +115,6 @@ vector<ll> sieve(ll n){ //エラトステネス
     return prime;
 }
 
-vector<ll> compress(vector<ll> v){
-    ll n = v.size();
-    vector<ll> v2;
-    rep(i,0,n) v2.push_back(v[i]);
-    sort(v2.begin(), v2.end());
-    vector<ll> res;
-    rep(i,0,n){
-        ll pos = lower_bound(v2.begin(), v2.end(), v[i]) - v2.begin();
-        res.push_back(pos + 1); 
-    }
-    return res;
-}
 
 bool isSquare(ll x){
 	ll lv = 0, rv = x+1;
