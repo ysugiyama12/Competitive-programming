@@ -15,24 +15,31 @@ void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t).
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N,K;
-    cin >> N >> K;
-    ll dp[110][1010] = {};
-    rep(i,1,N+1){
-        dp[1][i] = 1;
-    }   
-    rep(i,1,K){
-        rep(n,1,N+1){
-            ll v = N / n;
-            rep(m,1,v+1){
-                dp[i+1][m] += dp[i][n];
-                dp[i+1][m] %= MOD;
-            }
+    ll N,X;
+    cin >> N >> X;
+    ll w[35];
+    rep(i,0,N) cin >> w[i];
+    ll n = N/2;
+    map<ll,ll> mp1, mp2;
+    rep(bit,0,(1LL<<n)){
+        ll v = 0;
+        rep(i,0,n){
+            if((bit>>i) & 1) v += w[i];
         }
+        mp1[v]++;
+    }
+    rep(bit,0,(1LL<<(N-n))){
+        ll v = 0;
+        rep(i,0,N-n){
+            if((bit>>i) & 1) v += w[n + i];
+        }
+        mp2[v]++;
     }
     ll ans = 0;
-    rep(i,1,N+1) (ans += dp[K][i]) %= MOD;
+    for(auto &e: mp1){
+        if(e.first > X) continue;
+        ans += e.second * mp2[X - e.first];
+    }
     print(ans);
-
 
 }

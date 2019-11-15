@@ -13,7 +13,20 @@ template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
 int main(){
-	cin.tie(0);
-	ios::sync_with_stdio(false);
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    ll t;
+    cin >> t;
+    while(t--){
+        ll n,x,a,b;
+        cin >> n >> x >> a >> b;
+        if(a > b) swap(a,b);
+        ll dist = abs(a-b);
+        ll amari = a-1 + n-b;
+        print(dist + min(amari, x));
+
+    }
+    
+    
 
 }

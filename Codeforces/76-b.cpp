@@ -15,24 +15,28 @@ void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t).
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N,K;
-    cin >> N >> K;
-    ll dp[110][1010] = {};
-    rep(i,1,N+1){
-        dp[1][i] = 1;
-    }   
-    rep(i,1,K){
-        rep(n,1,N+1){
-            ll v = N / n;
-            rep(m,1,v+1){
-                dp[i+1][m] += dp[i][n];
-                dp[i+1][m] %= MOD;
+    ll T;
+    cin >> T;
+    while(T--){
+        ll x,y;
+        cin >> x >> y;
+        if(x == 1){
+            if(y == 1){
+                print("YES");
+            }else{
+                print("NO");
             }
+        }else if(x == 2 || x == 3){
+            if(y <= 3){
+                print("YES");
+            }else{
+                print("NO");
+            }
+        }else{
+            print("YES");
         }
-    }
-    ll ans = 0;
-    rep(i,1,N+1) (ans += dp[K][i]) %= MOD;
-    print(ans);
 
+    }
+    
 
 }

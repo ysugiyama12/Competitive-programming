@@ -17,12 +17,12 @@ private:
     vector<ll> node;
 
 public:
-    SegmentTreeMin(vector<ll> v){
-        ll sz = v.size();
+    SegmentTreeMin(ll N){
+        ll sz = N;
         n = 1; while(n < sz) n *= 2;
         node.resize(2*n-1, INF);
 
-        rep(i,0,sz) node[i+n-1] = v[i];
+        rep(i,0,sz) node[i+n-1] = INF;
         rrep(i,n-2,0) node[i] = min(node[2*i+1], node[2*i+2]);
     }
 
@@ -44,13 +44,21 @@ public:
         }
 	}
 
-    ll getMin(ll a, ll b, ll k = 0, ll l = 0, ll r = -1){
-        if(r < 0) r = n;
-        if(r <= a || b <= l) return INF;
-        if(a <= l && r <= b) return node[k];
-        ll vl = getMin(a, b, 2*k+1, l, (l+r)/2);
-        ll vr = getMin(a, b, 2*k+2, (l+r)/2, r);
-        return min(vl, vr);
+    ll getMin(ll a, ll b){
+        ll res = INF;
+        a += n; b += n;
+        while(a < b){
+            if(b & 1){
+                b -= 1;
+                res = min(res, node[b-1]);
+            }
+            if(a & 1){
+                res = min(res, node[a-1]);
+                a++;
+            }
+            a >>= 1; b >>= 1;
+        }
+        return res;
     }
 };
 
@@ -62,12 +70,12 @@ private:
     vector<ll> node;
 
 public:
-    SegmentTreeMax(vector<ll> v){
-        ll sz = v.size();
+    SegmentTreeMax(ll N){
+        ll sz = N;
         n = 1; while(n < sz) n *= 2;
         node.resize(2*n-1, -INF);
 
-        rep(i,0,sz) node[i+n-1] = v[i];
+        rep(i,0,sz) node[i+n-1] = -INF;
         rrep(i,n-2,0) node[i] = max(node[2*i+1], node[2*i+2]);
     }
 
@@ -89,20 +97,28 @@ public:
         }
 	}
 
-    ll getMax(ll a, ll b, ll k = 0, ll l = 0, ll r = -1){
-        if(r < 0) r = n;
-        if(r <= a || b <= l) return -INF;
-        if(a <= l && r <= b) return node[k];
-        ll vl = getMax(a, b, 2*k+1, l, (l+r)/2);
-        ll vr = getMax(a, b, 2*k+2, (l+r)/2, r);
-        return max(vl, vr);
+    ll getMax(ll a, ll b){
+        ll res = -INF;
+        a += n; b += n;
+        while(a < b){
+            if(b & 1){
+                b -= 1;
+                res = max(res, node[b-1]);
+            }
+            if(a & 1){
+                res = max(res, node[a-1]);
+                a++;
+            }
+            a >>= 1; b >>= 1;
+        }
+        return res;
     }
 };
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    SegmentTree st(vector<ll>(10, 0));
+    SegmentTreeMin st(10);
     st.update(0,2);
     st.update(1,3);
     st.update(2,1);

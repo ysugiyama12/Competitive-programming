@@ -11,8 +11,7 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-
-
+ 
 class SegmentTree {
   struct Node {
     Node *left, *right;
@@ -304,43 +303,48 @@ public:
   }
 };
 
-vector<ll> compress(vector<ll> x, ll n){
-    // [1,n]
-	vector<ll> v;
-	v.push_back(-INF); v.push_back(INF);
-	rep(i,0,n) v.push_back(x[i]);
-	sort(v.begin(), v.end());
-	v.erase(unique(v.begin(), v.end()), v.end());
-	vector<ll> res;
-	rep(i,0,n) res.push_back(lower_bound(v.begin(), v.end(), x[i]) - v.begin());
-	return res;
-}
+ll L[100010], R[100010], C[100010];
+
+typedef struct {
+    ll L;
+    ll R;
+    ll C;
+} P;
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N;
-    cin >> N;
-    ll A[100010];
-    rep(i,0,N) cin >> A[i];
-    SegmentTree sg(100010, A);
-    rep(i,0,N){
-        ll v = sg.query_sum(i, i+1);
-        if(v > 0){
-            ll sum1 = sg.query_sum(0,N);
-            sg.add_val(0, N, -v);
-            sg.update_max(0, N, 0);
-            ll sum2 = sg.query_sum(0,N);
-            print(sum1-sum2);
-        }else{
-            print(0);
-        }
+    ll N,M;
+    cin >> N >> M;
+    rep(i,0,M){
+        cin >> L[i] >> R[i] >> C[i];
+        L[i]--; R[i]--;
     }
+    ll v[100010] = {};
+    rep(i,1,N) v[i] = INF;
+    SegmentTree stb(N, v);
+    vector<P> lp;
+    rep(i,0,M) lp.push_back((P){L[i], R[i], C[i]});
+    sort(lp.begin(), lp.end(), [](P p1, P p2){
+        if(p1.L == p2.L){
+            return p1.R < p2.R;
+        }
+        return p1.L < p2.L;
+    });
 
-    
-
-
-    
+    ll dist[100010] = {};
+    dist[0] = 0;
+    rep(i,1,N) dist[i] = INF;
+    rep(i,0,M){
+        ll d1 = stb.query_sum(lp[i].L, lp[i].L+1);
+        stb.update_min(lp[i].L+1, lp[i].R+1, d1 + lp[i].C);
+    }
+    ll ans = stb.query_sum(N-1, N);
+    if(ans == INF){
+        print(-1);
+    }else{
+        print(ans);
+    }
     
 
 }

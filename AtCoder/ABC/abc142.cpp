@@ -1,93 +1,104 @@
 /*** author: yuji9511 ***/
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-typedef pair<ll, ll> lpair;
-const ll MOD = 1e9 + 7;
+using ll = long long;
+using lpair = pair<ll, ll>;
+const ll MOD = 1e9+7;
 const ll INF = 1e18;
-#define rep(i,m,n) for(ll i = (m); i < (n); i++)
-#define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
-#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i==n-1];};
+#define rep(i,m,n) for(ll i=(m);i<(n);i++)
+#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
+#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<" \n"[i==n-1];};
 void print() {}
-template <class Head, class... Tail>
-void print(Head&& head, Tail&&... tail){ cout << head << " \n"[sizeof...(tail) == 0]; print(forward<Tail>(tail)...);}
-bool seen[1010] = {}, finished[1010] = {};
-ll N,M;
-vector<ll> tree[1010];
-ll pos = -1;
-stack<ll> hist;
-
-void dfs(ll cur, ll par){
-    seen[cur] = true;
-    hist.push(cur);
-    for(auto &e: tree[cur]){
-        if(e == par) continue;
-        if(finished[e]) continue;
-
-        if(seen[e] && !finished[e]){
-            pos = e;
-            return;
-        }
-        dfs(e, cur);
-        if(pos != -1) return;
-    }
-    hist.pop();
-    finished[cur] = true;
-
-}
+template <class H,class... T>
+void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
+    ll N,M;
     cin >> N >> M;
     ll A[2010], B[2010];
-    ll h[1010] = {};
-    map<lpair, ll> mp;
+    vector<ll> tree[1010], tree_inv[1010];
     rep(i,0,M){
         cin >> A[i] >> B[i];
         A[i]--; B[i]--;
         tree[A[i]].push_back(B[i]);
-        h[B[i]]++;
-        mp[make_pair(A[i], B[i])]++;
+        tree_inv[B[i]].push_back(A[i]);
     }
-    pos = -1;
-    dfs(0, -1);
-    set<ll> cycle;
-    vector<ll> dd;
-    while (!hist.empty()) {
-        ll t = hist.top();
-        dd.push_back(t);
-        cycle.insert(t);
-        hist.pop();
-        if (t == pos) break;
+    ll ans = INF, idx = -1, last_pos = -1;
+
+    rep(i,0,N){
+        queue<lpair> que;
+        que.push({i, 0});
+        bool visit[1010] = {};
+        bool ok = false;
+        while(not que.empty()){
+            lpair l1 = que.front();
+            que.pop();
+            if(visit[l1.first]) continue;
+            visit[l1.first] = true;
+            for(auto &e: tree[l1.first]){
+                if(not visit[e]){
+                    que.push({e, l1.second+1});
+                }else{
+                    if(e == i){
+                        if(ans > l1.second+1){
+                            ans = l1.second+1;
+                            idx = i;
+                            last_pos = l1.first;
+                        }
+                        ok = true;
+                        break;
+                    }
+                }
+            }
+            if(ok) break;
+        }
     }
-    if(cycle.size() == 0){
+
+    if(idx == -1){
         print(-1);
         return 0;
     }
-    reverse(dd.begin(), dd.end());
-    ll sz = dd.size();
-    if(sz == 3){
-        print(sz);
-        for(auto &e: dd) print(e+1);
-        return 0;
-    }
-    rep(diff, 1, sz/2 + 1){
-        rep(i,0,sz){
-            ll start = i, goal = (i+diff) % sz;
-            if(mp[make_pair(dd[goal], dd[start])]){
-                // print(start, goal);
-                // print(dd[goal],dd[start]);
-                print(diff+1);
-                rep(j,i,i+diff+1){
-                    print(dd[j % sz]+1);
+
+    ll dist[1010] = {};
+    rep(i,0,N) dist[i] = INF;
+    bool visit[1010] = {};
+    queue<lpair> que;
+    bool ok = false;
+    que.push({idx, 0});
+    while(not que.empty()){
+        lpair l1 = que.front();
+        que.pop();
+        if(visit[l1.first]) continue;
+        visit[l1.first] = true;
+        dist[l1.first] = l1.second;
+        for(auto &e: tree[l1.first]){
+            if(not visit[e]){
+                que.push({e, l1.second+1});
+            }else{
+                if(e == idx){
+                    ok = true;
+                    break;
                 }
-                return 0;
+            }
+        }
+        if(ok) break;
+    }
+
+    ll pos = last_pos;
+    vector<ll> res;
+    while(1){
+        res.push_back(pos);
+        if(pos == idx) break;
+        for(auto &e: tree_inv[pos]){
+            if(dist[pos] == dist[e]+1){
+                pos = e;
+                break;
             }
         }
     }
-    print(sz);
-    for(auto &e: dd) print(e+1);
-
-    
+    sort(res.begin(), res.end());
+    print(res.size());
+    for(auto &e: res) print(e+1);
 }

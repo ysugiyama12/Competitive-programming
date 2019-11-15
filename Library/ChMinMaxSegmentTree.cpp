@@ -12,7 +12,6 @@ void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
-
 class SegmentTree {
   struct Node {
     Node *left, *right;
@@ -304,43 +303,11 @@ public:
   }
 };
 
-vector<ll> compress(vector<ll> x, ll n){
-    // [1,n]
-	vector<ll> v;
-	v.push_back(-INF); v.push_back(INF);
-	rep(i,0,n) v.push_back(x[i]);
-	sort(v.begin(), v.end());
-	v.erase(unique(v.begin(), v.end()), v.end());
-	vector<ll> res;
-	rep(i,0,n) res.push_back(lower_bound(v.begin(), v.end(), x[i]) - v.begin());
-	return res;
-}
-
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N;
-    cin >> N;
-    ll A[100010];
-    rep(i,0,N) cin >> A[i];
-    SegmentTree sg(100010, A);
-    rep(i,0,N){
-        ll v = sg.query_sum(i, i+1);
-        if(v > 0){
-            ll sum1 = sg.query_sum(0,N);
-            sg.add_val(0, N, -v);
-            sg.update_max(0, N, 0);
-            ll sum2 = sg.query_sum(0,N);
-            print(sum1-sum2);
-        }else{
-            print(0);
-        }
-    }
-
-    
-
-
-    
+    ll v[100010] = {};
+    SegmentTree sg(100010, v);
     
 
 }

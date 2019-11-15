@@ -1,8 +1,8 @@
 /*** author: yuji9511 ***/
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-typedef pair<ll,ll> lpair;
+using ll = long long;
+using lpair = pair<ll, ll>;
 const ll MOD = 1e9+7;
 const ll INF = 1e18;
 #define rep(i,m,n) for(ll i=(m);i<(n);i++)
@@ -17,15 +17,16 @@ int main(){
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    ll A[3010];
-    rep(i,0,N) cin >> A[i];
-    ll M;
-    cin >> M;
-    ll L[3010], R[3010], B[3010];
-    rep(i,0,M){
-        cin >> L[i] >> R[i] >> B[i];
-        L[i]--; R[i]--;
+    string S;
+    cin >> S;
+    ll cr = 0,cg = 0, cb = 0;
+    rep(i,0,N){
+        if(S[i] == 'R') cr++;
+        if(S[i] == 'G') cg++;
+        if(S[i] == 'B') cb++;
     }
+    print(cr % 2 + cg % 2 + cb % 2);
+
     
 
 }
