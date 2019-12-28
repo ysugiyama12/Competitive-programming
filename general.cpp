@@ -11,82 +11,60 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+ll M,N;
+string S,T;
+ll calc(ll si, ll ti){
+    bool dp[55][55] = {};
+    dp[si][ti] = true;
+    rep(i,si,M+1){
+        rep(j,ti,N+1){
+            if(not dp[i][j]) continue;
+            // print(i,j);
 
-struct SegmentTreeMin {
-private:
-    int n;
-    vector<ll> node;
-
-public:
-    SegmentTreeMin(ll N){
-        ll sz = N;
-        n = 1; while(n < sz) n *= 2;
-        node.resize(2*n-1, INF);
-
-        rep(i,0,sz) node[i+n-1] = (1LL<<31)-1;
-        rrep(i,n-2,0) node[i] = min(node[2*i+1], node[2*i+2]);
-    }
-
-    void update(ll x, ll val){
-        x += (n-1);
-        node[x] = val;
-        while(x > 0){
-            x = (x-1)/2;
-            node[x] = min(node[2*x+1], node[2*x+2]);
-        }
-    }
-
-	void add(ll x, ll val){
-		x += n-1;
-		node[x] += val;
-        while(x > 0){
-            x = (x-1)/2;
-            node[x] = min(node[2*x+1], node[2*x+2]);
-        }
-	}
-
-    // ll getMin(ll a, ll b, ll k = 0, ll l = 0, ll r = -1){
-    //     if(r < 0) r = n;
-    //     if(r <= a || b <= l) return INF;
-    //     if(a <= l && r <= b) return node[k];
-    //     ll vl = getMin(a, b, 2*k+1, l, (l+r)/2);
-    //     ll vr = getMin(a, b, 2*k+2, (l+r)/2, r);
-    //     return min(vl, vr);
-    // }
-    ll getMin(ll a, ll b){
-        ll res = INF;
-        a += n; b += n;
-        while(a < b){
-            if(b & 1){
-                b -= 1;
-                res = min(res, node[b-1]);
+            ll sum = i - si+ j - ti;
+            if(sum % 2 == 0){
+                if(S[i] == 'I'){
+                    dp[i+1][j] = true;
+                }
+                if(T[j] == 'I'){
+                    dp[i][j+1] = true;
+                }
+            }else{
+                if(S[i] == 'O'){
+                    dp[i+1][j] = true;
+                }
+                if(T[j] == 'O'){
+                    dp[i][j+1] = true;
+                }
             }
-            if(a & 1){
-                res = min(res, node[a-1]);
-                a++;
-            }
-            a >>= 1; b >>= 1;
         }
-        return res;
     }
-};
-
+    ll ans = 0;
+    rep(i,si,M+1){
+        rep(j,ti,N+1){
+            if(dp[i][j]) ans = max(ans, i - si+j - ti);
+        }
+    }
+    if(ans > 0 && ans % 2 == 0) ans--;
+    return ans;
+}
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N,Q;
-    cin >> N >> Q;
-    SegmentTreeMin sg(100010);
-    rep(i,0,Q){
-        ll a,b,c;
-        cin >> a >> b >> c;
-        if(a == 0){
-            sg.update(b, c);
-        }else{
-            print(sg.getMin(b, c+1));
+    cin >> M >> N;
+    cin >> S >> T;
+    // if(N > 50 || M > 50) return 0;
+    // bool dp[2010][2010] = {};
+    S += '?';
+    T += '?';
+    // dp[0][0] = true;
+    ll ans = 0;
+    rep(i,0,M){
+        rep(j,0,N){
+            ll res = calc(i,j);
+            ans = max(ans, res);
         }
     }
-    
-    
-
+    print(ans);
+    print(abs(ans - 2));
 }

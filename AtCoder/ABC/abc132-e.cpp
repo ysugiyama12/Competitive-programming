@@ -42,6 +42,7 @@ int main(){
         ll dd = l1.first;
         ll idx = l1.second % 1000000;
         ll mode = l1.second / 1000000;
+        
         pq.pop();
         for(auto &e: tree[idx]){
             ll nxt = (mode + 1) % 3;

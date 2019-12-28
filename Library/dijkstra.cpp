@@ -34,13 +34,15 @@ int main(){
         tree[q[i]].push_back(make_pair(p[i], c[i]));
     }
     priority_queue<lpair, vector<lpair> ,greater<lpair> > pq;
+    
     // priority_queue<lpair, vector<lpair> ,compare > pq;
-    ll dist[20] = {};
+    ll dist[100010] = {};
     rep(i,1,N) dist[i] = INF;
-    rep(i,0,N) pq.push(make_pair(dist[i], i));
+    pq.push({0,0});
     while(!pq.empty()){
         lpair l1 = pq.top();
         pq.pop();
+        if(dist[l1.second] < l1.first) continue;
         for(auto &e: tree[l1.second]){
             if(dist[e.first] > dist[l1.second] + e.second){
                 dist[e.first] = dist[l1.second] + e.second;

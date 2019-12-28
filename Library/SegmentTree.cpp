@@ -60,8 +60,16 @@ public:
         }
         return res;
     }
-};
 
+    ll getsum(ll a, ll b, ll k=0, ll l=0, ll r=-1) {
+        if(r < 0) r = n;
+        if(b <= l || r <= a) return 0;
+        if(a <= l && r <= b) return node[k];
+        ll vl = getsum(a, b, 2*k+1, l, (l+r)/2);
+        ll vr = getsum(a, b, 2*k+2, (l+r)/2, r);
+        return vl + vr;
+    }
+};
 
 // getMax
 struct SegmentTreeMax {

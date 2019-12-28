@@ -30,6 +30,7 @@ int main(){
     while(not pq.empty()){
         lpair l1 = pq.top();
         pq.pop();
+        if(dist[l1.second] < l1.first) continue;
         for(auto &e: edge[l1.second]) {
             if(dist[e.first] > dist[l1.second] + e.second){
                 dist[e.first] = dist[l1.second] + e.second;
