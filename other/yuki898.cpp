@@ -11,26 +11,32 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-
-// Lowest Common Ancestor
-vector<int> tree[100010];
-int parent[100010] = {};
-int depth[100010] = {};
-int next_val[25][100010] = {};
+vector<lpair> tree[100010];
+ll parent[100010] = {};
+ll depth[100010] = {};
+ll next_val[25][100010] = {};
 ll logN = 0;
+ll sum[100010] = {};
 ll N;
+void dfs2(ll cur, ll par, ll d){
+	if(par != -1) sum[cur] = sum[par] + d;
+	for(auto &e: tree[cur]){
+		if(e.first == par) continue;
+		dfs2(e.first, cur, e.second);
+	}
+}
 
 void dfs(ll cur, ll par, ll d){
 	depth[cur] = d;
 	parent[cur] = par;
 	for(auto &e: tree[cur]){
-		if(e == par) continue;
-		dfs(e, cur, d+1);
+		if(e.first == par) continue;
+		dfs(e.first, cur, d+1);
 	}
 }
 
 
-ll getParent(ll cur, ll num) {
+ll get_parent(ll cur, ll num) {
     ll p = cur;
     rrep(k,logN-1, 0){
         if(p == -1){
@@ -43,17 +49,17 @@ ll getParent(ll cur, ll num) {
     return p;
 }
 
-ll getLCA(ll va, ll vb){
+ll get_LCA(ll va, ll vb){
 	if(depth[va] > depth[vb]){
-		va = getParent(va, depth[va] - depth[vb]);
+		va = get_parent(va, depth[va] - depth[vb]);
 	}else if(depth[va] < depth[vb]){
-		vb = getParent(vb, depth[vb] - depth[va]);
+		vb = get_parent(vb, depth[vb] - depth[va]);
 	}
 	ll lv = -1, rv = N+1;
 	while(rv - lv > 1){
 		ll mid = (rv + lv) / 2;
-		ll ta = getParent(va, mid);
-		ll tb = getParent(vb, mid);
+		ll ta = get_parent(va, mid);
+		ll tb = get_parent(vb, mid);
 		if(ta == -1 || tb == -1){
 			rv = mid;
 		}else if(ta != tb){
@@ -62,7 +68,7 @@ ll getLCA(ll va, ll vb){
 			rv = mid;
 		}
 	}
-	return getParent(va, rv);
+	return get_parent(va, rv);
 }
 
 int main(){
@@ -70,11 +76,10 @@ int main(){
 	ios::sync_with_stdio(false);
 	cin >> N;
 	rep(i,0,N-1){
-		ll u,v;
-		cin >> u >> v;
-		u--; v--;
-		tree[u].push_back(v);
-		tree[v].push_back(u);
+		ll u,v,w;
+		cin >> u >> v >> w;
+		tree[u].push_back({v,w});
+		tree[v].push_back({u,w});
 	}
 	logN = floor(log2(N)) + 1;
 	dfs(0, -1, 0);
@@ -90,14 +95,15 @@ int main(){
             }
         }
     }
+	dfs2(0,-1,0);
 	ll Q;
 	cin >> Q;
 	while(Q--){
-		ll a,b;
-		cin >> a >> b;
-		a--; b--;
-		ll pa = getLCA(a,b);
-		ll dd = depth[a] - depth[pa] + depth[b] - depth[pa] + 1;
-		print(dd);
+		ll x,y,z;
+		cin >> x >> y >> z;
+		ll ans = sum[x] + sum[y] + sum[z] - sum[get_LCA(x,y)] - sum[get_LCA(y,z)] - sum[get_LCA(x,z)];
+		print(ans);
 	}
+	
+
 }

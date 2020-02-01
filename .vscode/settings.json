@@ -84,7 +84,8 @@
         "stdexcept": "cpp",
         "system_error": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "bit": "cpp"
     },
     "C_Cpp.intelliSenseCacheSize": 0,
     "C_Cpp.errorSquiggles": "Disabled"

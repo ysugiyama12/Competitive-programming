@@ -113,6 +113,9 @@ vector<ll> sieve(ll n){ //エラトステネス
         }
     }
     return prime;
+    rep(i,0,(1<<60)){
+        print(i);
+    }
 }
 
 
