@@ -31,7 +31,7 @@ public:
     }
 
     ll sum(ll lv, ll rv){ // [lv, rv)
-        return sum(rv-1) - sum(lv-1);
+        return sum(rv-1) - sum(lv);
     }
 
     void add(ll x, ll v){
@@ -62,10 +62,10 @@ int main(){
     BIT bit(100010);
     ll ans = 0;
     rep(i,0,N){
-        ans += bit.sum(0, a[i]);
+        ans += bit.sum(a[i], N+1);
         bit.add(a[i], 1);
     }
-    ans = N*(N-1) / 2 - ans;
+    // ans = N*(N-1) / 2 - ans;
     print(ans);
     
 }

@@ -1,15 +1,18 @@
+/*** author: yuji9511 ***/
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-typedef pair<ll, ll> lpair;
-const ll MOD = 1e9 + 7;
+using ll = long long;
+using lpair = pair<ll, ll>;
+const ll MOD = 1e9+7;
 const ll INF = 1e18;
-#define rep(i,m,n) for(ll i = (m); i < (n); i++)
-#define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
-#define print(x) cout << (x) << endl;
-#define print2(x,y) cout << (x) << " " << (y) << endl;
-#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
+#define rep(i,m,n) for(ll i=(m);i<(n);i++)
+#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
+#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<" \n"[i==n-1];};
+void print() {}
+template <class H,class... T>
+void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
+// geometry library
 #define EPS (1e-10)
 #define EQ(a,b) (abs((a) - (b)) < EPS)
 typedef complex<double> P;
@@ -52,8 +55,7 @@ ll ccw(P p0,P p1,P p2){
 }
 
 bool is_intersect(P p1, P p2, P p3, P p4){
-  return (ccw(p1,p2,p3) * ccw(p1,p2,p4) <= 0 &&
-      ccw(p3,p4,p1) * ccw(p3,p4,p2) <= 0 );
+    return (ccw(p1,p2,p3) * ccw(p1,p2,p4) <= 0 && ccw(p3,p4,p1) * ccw(p3,p4,p2) <= 0 );
 }
 
 P intersect_pos(P a1, P a2, P b1, P b2){ //直線同士の交点
@@ -78,42 +80,79 @@ double getDistance(P a1, P a2, P b1, P b2){
     return min(v1,v2);
 }
 
-#define printP(P) cout << "(" << P.real() << ", " << P.imag() << ")" << endl;
+bool isconvex(vector<P> ps) {
+    ll n = ps.size();
+    rep(i,0,n){
+        if (ccw(ps[(i-1+n)%n], ps[i], ps[(i+1)%n]) > 0) return false;
+    }
+    return true;
+}
+
+vector<P> convex_hull(vector<P> ps) {
+    int n = ps.size(), k = 0;
+    sort(ps.begin(), ps.end(), [](P p1, P p2){
+        if(p1.real() == p2.real()) {
+            return p1.imag() < p2.imag();
+        }
+        return p1.real() < p2.real();
+    });
+    
+    vector<P> ch(2*n);
+    for (int i = 0; i < n; ch[k++] = ps[i++]){
+        // while (k >= 2 && ccw(ch[k-2], ch[k-1], ps[i]) < 0){
+        while (k >= 2 && cross( ch[k - 1] - ch[k - 2], ps[i] - ch[k - 1]) < 0){
+            k--;
+        }
+    }
+
+    for (int i = n-2, t = k+1; i >= 0; ch[k++] = ps[i--]){
+        // while (k >= t && ccw(ch[k-2], ch[k-1], ps[i]) < 0){
+        while (k >= t && cross( ch[k - 1] - ch[k - 2], ps[i] - ch[k - 1]) < 0){
+            k--;
+        }
+    }
+    ch.resize(k-1);
+    return ch;
+}
+
+double angle(P p1, P p2, P p3){ // <p1p2p3
+    double cosine = dot(p2 - p1, p3 - p2);
+    cosine /= sqrt(norm(p2 - p1) * norm(p3 - p2));
+    return acos(cosine);
+}
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    P pos[55];
+    ll x[100010], y[100010];
+    vector<P> ps;
     rep(i,0,N){
-        double x,y;
-        cin >> x >> y;
-        P p1(x,y);
-        pos[i] = p1;
+        cin >> x[i] >> y[i];
+        P p1(x[i], y[i]);
+        ps.push_back(p1);
     }
-    // 2点の時
-    double ans = INF;
-    rep(i,0,N){
-        rep(j,i+1,N){
-            P c = (pos[i] + pos[j]) / 2.0;
-            double r = abs(pos[i] - pos[j]) / 2.0;
-            bool ok = true;
-            rep(k,0,N){
-                if(k == i || k == j) continue;
-                double d = abs(c - pos[k]);
-                if(d <= r + EPS){
-                    ok = false;
-                }
-            }
-            if(ok){
-                ans = min(ans, r);
-                print(i,j,r);
+    vector<P> convex = convex_hull(ps);
+    ll m = convex.size();
+    print(m);
+    vector<P> tmp = convex;
 
-            }
+    sort(tmp.begin(), tmp.end(), [](P p1, P p2){
+        if(p1.imag() == p2.imag()){
+            return p1.real() < p2.real();
+        }
+        return p1.imag() < p2.imag();
+    });
+    ll start = -1;
+    rep(i,0,m){
+        if(EQ(convex[i], tmp[0])){
+            start = i;
+            break;
         }
     }
-    print(ans);
-
-
+    rep(i,0,m){
+        ll idx = (i+start)%m;
+        print(convex[idx].real(), convex[idx].imag());
+    }
 }
