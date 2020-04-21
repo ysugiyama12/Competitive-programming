@@ -11,32 +11,20 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+mt19937 mrand(random_device{}());
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    string a;
-    cin >> a;
-    if(a == "0"){
-        print("Nothing");
-    }else if(a == "3.14159265"){
-        print("pi");
-    }else if(a == "1112345678999+X"){
-        print("九蓮宝燈");
-        print("Thirteen Orphans");
-    }else if(a == "All"){
-        print(3);
-        print(4);
-        print(4);
-        print(3);
-        print(6);
-        print(2);
-        print(2);
-    }else if(a == "くぁｗせｄｒｆｔｇｙふじこｌｐ"){
-        print("さｍｐぇ");
-
-    }else{
-        exit(1);
+    ll T = 1000;
+    print(T);
+    while(T--){
+        ll N = 2;
+        cout << N << endl;
+        rep(i,0,N){
+            ll a = mrand() % 10, b = mrand() % 10;
+            cout << a << " " << b << endl;
+        }
     }
 
     

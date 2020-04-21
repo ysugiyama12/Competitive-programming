@@ -11,30 +11,32 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-ll power(ll x, ll n){
-    if(n == 0) return 1LL;
-    ll res = power(x * x % MOD, n/2);
-    if(n % 2 == 1) res = res * x % MOD;
-    return res;
-}
+ll a[200010], ca[200010];
+ll b[200010], cb[200010];
+
+ll x[200010], y[200010], z[200010];
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N;
-    cin >> N;
-    ll a[100010], b[100010];
-    rep(i,0,N) cin >> a[i];
-    rep(i,0,N) cin >> b[i];
-    rep(i,0,N) a[i] *= (i+1) * (N-i);
-    sort(a, a+N);
-    sort(b, b+N, greater<ll>());
-    ll ans = 1;
+    ll N,M,P;
+    cin >> N >> M >> P;
+    rep(i,0,N) cin >> a[i] >> ca[i];
+    rep(i,0,M) cin >> b[i] >> cb[i];
+    rep(i,0,P) cin >> x[i] >> y[i] >> z[i];
+    ll ans = -INF;
     rep(i,0,N){
-        ans *= power(b[i], a[i]);
-        ans %= MOD;
+        rep(j,0,M){
+            ll attack = a[i], defense = b[j];
+            ll cost = - ca[i] - cb[j];
+
+            rep(k,0,P){
+                if(attack > x[k] && defense > y[k]) cost += z[k];
+            }
+            ans = max(ans, cost);
+            print(i,j,cost);
+        }
     }
     print(ans);
-    
 
 }

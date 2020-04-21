@@ -3,7 +3,7 @@
 using namespace std;
 using ll = long long;
 using lpair = pair<ll, ll>;
-const ll MOD = 1e9+7;
+const ll MOD = 998244353;
 const ll INF = 1e18;
 #define rep(i,m,n) for(ll i=(m);i<(n);i++)
 #define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
@@ -11,30 +11,31 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-ll power(ll x, ll n){
-    if(n == 0) return 1LL;
-    ll res = power(x * x % MOD, n/2);
-    if(n % 2 == 1) res = res * x % MOD;
-    return res;
-}
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N;
-    cin >> N;
-    ll a[100010], b[100010];
-    rep(i,0,N) cin >> a[i];
-    rep(i,0,N) cin >> b[i];
-    rep(i,0,N) a[i] *= (i+1) * (N-i);
-    sort(a, a+N);
-    sort(b, b+N, greater<ll>());
-    ll ans = 1;
+    ll N,K;
+    cin >> N >> K;
+    ll p[200010];
+    rep(i,0,N) cin >> p[i];
+    ll max_val = 0;
+    rep(i,0,K) max_val += N-i;
+    ll res = 1;
+    vector<ll> pos;
     rep(i,0,N){
-        ans *= power(b[i], a[i]);
-        ans %= MOD;
+        if(p[i] >= N-K+1){
+            pos.push_back(i);
+        }
     }
-    print(ans);
+    ll sz = pos.size();
+    rep(i,0,sz-1){
+        res *= pos[i+1] - pos[i];
+        res %= MOD;
+    }
+    print(max_val, res);
+    
+
     
 
 }

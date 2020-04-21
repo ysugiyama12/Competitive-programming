@@ -11,28 +11,41 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-ll power(ll x, ll n){
-    if(n == 0) return 1LL;
-    ll res = power(x * x % MOD, n/2);
-    if(n % 2 == 1) res = res * x % MOD;
-    return res;
-}
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    ll a[100010], b[100010];
-    rep(i,0,N) cin >> a[i];
-    rep(i,0,N) cin >> b[i];
-    rep(i,0,N) a[i] *= (i+1) * (N-i);
-    sort(a, a+N);
-    sort(b, b+N, greater<ll>());
-    ll ans = 1;
+    string S;
+    cin >> S;
+    ll c1 = 0, c2 = 0;
     rep(i,0,N){
-        ans *= power(b[i], a[i]);
-        ans %= MOD;
+        if(S[i] == '(') c1++;
+        else c2++;
+    }
+    if(c1 != c2){
+        print(-1);
+        return 0;
+    }
+    ll start = 0;
+    ll cnt = 0;
+    ll ans = 0;
+    bool ok = true;
+    rep(i,0,N){
+        if(S[i] == '('){
+            cnt++;
+        }else{
+            cnt--;
+        }
+        if(cnt < 0) ok = false;
+        if(cnt == 0){
+            if(not ok){
+                ans += i - start + 1;
+            }
+            start = i+1;
+            ok = true;
+        }
     }
     print(ans);
     

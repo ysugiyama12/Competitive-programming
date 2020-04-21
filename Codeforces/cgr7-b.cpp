@@ -15,30 +15,18 @@ void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t).
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    string a;
-    cin >> a;
-    if(a == "0"){
-        print("Nothing");
-    }else if(a == "3.14159265"){
-        print("pi");
-    }else if(a == "1112345678999+X"){
-        print("九蓮宝燈");
-        print("Thirteen Orphans");
-    }else if(a == "All"){
-        print(3);
-        print(4);
-        print(4);
-        print(3);
-        print(6);
-        print(2);
-        print(2);
-    }else if(a == "くぁｗせｄｒｆｔｇｙふじこｌｐ"){
-        print("さｍｐぇ");
-
-    }else{
-        exit(1);
+    ll N;
+    cin >> N;
+    ll b[200010];
+    rep(i,0,N) cin >> b[i];
+    ll a[200010] = {};
+    a[0] = b[0];
+    ll max_x = a[0];
+    rep(i,1,N){
+        a[i] = b[i] + max_x;
+        max_x = max(max_x, a[i]);
     }
-
+    printa(a, N);
     
 
 }
