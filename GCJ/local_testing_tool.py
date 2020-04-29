@@ -146,3 +146,5 @@ def main():
 
 if __name__ == "__main__":
   main()
+  # how to execute
+  # python interactive_runner.py python local_testing_tool.py 0 -- ./a.out 

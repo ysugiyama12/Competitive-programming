@@ -33,7 +33,9 @@ int main(){
         tree[p[i]].push_back(make_pair(q[i], c[i]));
         tree[q[i]].push_back(make_pair(p[i], c[i]));
     }
-    priority_queue<lpair, vector<lpair> ,greater<lpair> > pq;
+    // priority_queue<lpair, vector<lpair> ,greater<lpair> > pq;
+    // for c++17
+    priority_queue pq([](lpair l1, lpair l2){return l1 > l2;}, vector<lpair>());
     
     // priority_queue<lpair, vector<lpair> ,compare > pq;
     ll dist[100010] = {};

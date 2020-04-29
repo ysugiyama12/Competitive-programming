@@ -11,38 +11,39 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+int dp[301][301][301] = {};
+string S;
+
+int calc(ll i, ll j, ll k){
+    int &res = dp[i][j][k];
+    if(~res) return res;
+    if(j - i == 0){
+        return res = 0;
+    }else if(j - i == 1){
+        return res = 1;
+    }
+    res = 0;
+    if(S[i] == S[j-1]){
+        res = 2 + calc(i+1, j-1, k);
+    }else{
+        if(k > 0){
+            res = 2 + calc(i+1, j-1, k-1);
+        }
+    }
+    res = max(res, calc(i, j-1, k));
+    res = max(res, calc(i+1, j, k));
+    return res;
+}
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N;
-    cin >> N;
-    ll A[2010];
-    rep(i,0,N) cin >> A[i];
-    ll ans = 0;
-    rep(i,0,N+1){
-        vector<lpair> lv, rv;
-        rep(j,0,N){
-            if(j < i){
-                lv.push_back({A[j], j});
-            }else{
-                rv.push_back({A[j], j});
-            }
-        }
-        sort(lv.begin(), lv.end());
-        sort(rv.begin(), rv.end(), greater<lpair>());
-        ll res = 0;
-        ll idx = 0;
-        for(auto &e: rv){
-            res += e.first * abs(e.second - idx);
-            idx++; 
-        }
-        for(auto &e: lv){
-            res += e.first * abs(e.second - idx);
-            idx++;
-        }
-        ans = max(ans,res);
-    }
+    cin >> S;
+    ll K;
+    cin >> K;
+    memset(dp, -1, sizeof(dp));
+    ll N = S.size();
+    ll ans = calc(0,N,K);
     print(ans);
 
     
