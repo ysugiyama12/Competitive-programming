@@ -12,43 +12,43 @@ void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
-// struct SqrtDecomposition { // sum
-// private:
-//     ll N, K, sqrtN;
-//     vector<ll> data, bucket;
+struct SqrtDecomposition { // sum
+private:
+    ll N, K, sqrtN;
+    vector<ll> data, bucket;
 
-// public:
-//     SqrtDecomposition(ll n){
-//         N = n;
-//         sqrtN = sqrt(n);
-//         K = (N + sqrtN - 1) / sqrtN;
-//         data.assign(n+10, 0);
-//         bucket.assign(K+10, 0);
-//     }
+public:
+    SqrtDecomposition(ll n){
+        N = n;
+        sqrtN = sqrt(n);
+        K = (N + sqrtN - 1) / sqrtN;
+        data.assign(n+10, 0);
+        bucket.assign(K+10, 0);
+    }
 
-//     void add(ll x, ll y){
-//         ll k = x / sqrtN;
-//         data[x] += y;
-//         bucket[k] += y;
-//     }
+    void add(ll x, ll y){
+        ll k = x / sqrtN;
+        data[x] += y;
+        bucket[k] += y;
+    }
 
-//     // [x, y)
-//     ll getSum(ll x, ll y){
-//         ll sum = 0;
-//         rep(k,0,K){
-//             ll lv = k * sqrtN, rv = (k+1) * sqrtN;
-//             if(rv <= x || y <= lv) continue;
-//             if(x <= lv && rv <= y){
-//                 sum += bucket[k];
-//             }else{
-//                 for(ll i = max(x, lv); i < min(y, rv); i++){
-//                     sum += data[i];
-//                 }
-//             }
-//         }
-//         return sum;
-//     }
-// };
+    // [x, y)
+    ll getSum(ll x, ll y){
+        ll sum = 0;
+        rep(k,0,K){
+            ll lv = k * sqrtN, rv = (k+1) * sqrtN;
+            if(rv <= x || y <= lv) continue;
+            if(x <= lv && rv <= y){
+                sum += bucket[k];
+            }else{
+                for(ll i = max(x, lv); i < min(y, rv); i++){
+                    sum += data[i];
+                }
+            }
+        }
+        return sum;
+    }
+};
 
 // struct SqrtDecomposition { // min
 // private:

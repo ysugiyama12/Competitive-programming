@@ -85,10 +85,10 @@ public:
 
     void eval(ll k, ll l, ll r) {
         if(lazy[k] != 0) {
-            node[k] += lazy[k];
+            node[k] += lazy[k] * (r-l);
             if(r - l > 1) {
-                lazy[2*k+1] += lazy[k] / 2;
-                lazy[2*k+2] += lazy[k] / 2;
+                lazy[2*k+1] += lazy[k];
+                lazy[2*k+2] += lazy[k];
             }
             lazy[k] = 0;
         }
@@ -99,7 +99,7 @@ public:
         eval(k, l, r);
         if(b <= l || r <= a) return;
         if(a <= l && r <= b) {
-            lazy[k] += (r - l) * x;
+            lazy[k] += x;
             eval(k, l, r);
         }
         else {

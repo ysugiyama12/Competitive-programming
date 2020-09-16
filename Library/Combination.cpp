@@ -23,10 +23,10 @@ public:
         rep(i,2,N+1) fac.push_back(fac[i-1] * i % MOD);
         rep(i,0,N+1) facinv.push_back(power(fac[i], MOD-2));
     }
-    ll power(ll x, ll n){
+    ll power(ll x, ll n, ll m = MOD){
         if(n == 0) return 1LL;
-        ll res = power(x * x % MOD, n/2);
-        if(n % 2 == 1) res = res * x % MOD;
+        ll res = power(x * x % m, n/2, m);
+        if(n % 2 == 1) (res *= x) %= m;
         return res;
     }
     ll nck(ll n, ll k){
