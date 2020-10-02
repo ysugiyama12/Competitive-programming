@@ -18,17 +18,25 @@ private:
     ll N;
     vector<int> tree[200010];
     ll logN;
-    int parent[200010] = {};
-    int depth[200010] = {};
-    int next_val[25][200010] = {};
+    vector<int> parent;
+    vector<int> depth;
+    int next_val[20][200010] = {};
     ll p;
 public:
 
-    void build(ll n, vector<int> t[], ll pa = 0){
+    LCA(ll n){
         N = n;
-        p = pa;
-        rep(i,0,N) tree[i] = t[i];
         logN = floor(log2(N)) + 1;
+        parent.assign(N, 0);
+        depth.assign(N, 0);
+    }
+
+    void add_edge(ll from, ll to){
+        tree[from].push_back(to);
+    }
+
+    void build(ll pa = 0){
+        p = pa;
         dfs(p, -1, 0);
         rep(i,0,N){
             next_val[0][i] = parent[i];
@@ -87,15 +95,14 @@ public:
         }
         return getParent(va, rv);
     }
-} lca;
-
+};
+LCA lca(200000);
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
     ll N;
     cin >> N;
-    vector<int> tree[150010];
     ll par = -1;
     rep(i,0,N){
         ll p;
@@ -104,11 +111,11 @@ int main(){
             par = i;
         }else{
             p--;
-            tree[i].push_back(p);
-            tree[p].push_back(i);
+            lca.add_edge(i, p);
+            lca.add_edge(p, i);
         }
     }
-    lca.build(N, tree, par);
+    lca.build(par);
     ll Q;
     cin >> Q;
 

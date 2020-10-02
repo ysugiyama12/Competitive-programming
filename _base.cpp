@@ -1,6 +1,8 @@
 /*** author: yuji9511 ***/
 #include <bits/stdc++.h>
 using namespace std;
+// #include <atcoder/all>
+// using namespace atcoder;
 using ll = long long;
 using lpair = pair<ll, ll>;
 const ll MOD = 1e9+7;
@@ -11,9 +13,11 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+#define debug(x) cout << #x << " = " << (x) << " (L" << __LINE__ << ")" << "\n"
 
 void solve(){
-	
+	ll val = 1;
+	debug(val);
 
 }
 
