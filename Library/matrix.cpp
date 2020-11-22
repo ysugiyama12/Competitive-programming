@@ -40,8 +40,6 @@ mat pow_mat(mat A, ll n){
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-	cin.tie(0);
-	ios::sync_with_stdio(false);
 	ll a,b,n;
 	cin >> a >> b >> n;
 	if(n <= 1){

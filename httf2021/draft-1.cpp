@@ -13,14 +13,15 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+#define debug(x) cout << #x << " = " << (x) << " (L" << __LINE__ << ")" << "\n"
 
 void solve(){
-	
+    
 
 }
 
 int main(){
-	cin.tie(0);
-	ios::sync_with_stdio(false);
-	solve();
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    solve();
 }

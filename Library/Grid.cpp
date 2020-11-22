@@ -29,6 +29,7 @@ private:
     ll dw[4] = {1,-1,0,0};
 
 public:
+
     vector< vector<ll> > dist;
     ll H,W;
     vector<string> a;
@@ -40,35 +41,27 @@ public:
         dist.resize(H+1, vector<ll>(W+1));
         rep(i,0,H) rep(j,0,W) dist[i][j] = INF;
         a.resize(H+1);
-
     }
 
     void bfs(P start){
+        dist[start.h][start.w] = 0;
         queue<P> que;
-        rep(i,0,H){
-            rep(j,0,W){
-                if(a[i][j] == '#'){
-                    dist[i][j] = 0;
-                    que.push({i,j});
-                }
-            }
-        }
+        que.push(start);
         while(not que.empty()){
             P cur = que.front();
             que.pop();
             ll d_cur = dist[cur.h][cur.w];
             rep(k,0,4){
                 P nxt = {cur.h + dh[k], cur.w + dw[k]};
-                if(in_map(nxt) && dist[nxt.h][nxt.w] == INF){
+                if(in_grid(nxt) && a[nxt.h][nxt.w] == '.' && dist[nxt.h][nxt.w] == INF){
                     dist[nxt.h][nxt.w] = d_cur + 1;
-                    que.push(nxt); 
-
+                    que.push(nxt);
                 }
             }
         }
     }
 
-    bool in_map(P p){
+    bool in_grid(P p){
         if(p.h >= 0 && p.h < H && p.w >= 0 && p.w < W){
             return true;
         }
@@ -96,16 +89,20 @@ void solve(){
     ll H,W;
     cin >> H >> W;
     grid.init(H,W);
-    rep(i,0,H) cin >> grid.a[i];
-    grid.bfs({0,0});
-    ll ans = 0;
-    rep(i,0,H){
-        rep(j,0,W){
-            ans = max(ans, grid.dist[i][j]);
-        }
+    P start, goal;
+    cin >> start.h >> start.w;
+    cin >> goal.h >> goal.w;
+    start.h--; start.w--;
+    goal.h--; goal.w--;
+    rep(i,0,grid.H) cin >> grid.a[i];
+    grid.bfs(start);
+    ll ans = grid.dist[goal.h][goal.w];
+
+    if(ans == INF){
+        print(-1);
+    }else{
+        print(ans);
     }
-    // grid.vis_map();
-    print(ans);
 }
 
 int main(){

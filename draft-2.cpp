@@ -14,80 +14,117 @@ void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 #define debug(x) cout << #x << " = " << (x) << " (L" << __LINE__ << ")" << "\n"
+template<typename A, size_t N, typename T>
+void Fill(A (&array)[N], const T &val){
+    std::fill( (T*)array, (T*)(array+N), val );
+}
 
-template <class T> struct Dijkstra {
+typedef struct {
+    ll h,w;
+} P;
+
+struct Grid {
 private:
-    typedef struct {
-        ll to;
-        T d;
-    } P;
-
-    typedef struct {
-        T dst;
-        ll idx;
-    } Q;
-
-    vector<P> tree[200010];
-    ll N;
-    vector<T> dist;
+    ll dh[4] = {0,0,1,-1};
+    ll dw[4] = {1,-1,0,0};
 
 public:
-    Dijkstra(ll n){
-        N = n;
-        dist.assign(N, 1e9);
-    }
 
-    void add_edge(ll from, ll to, T cost){
-        tree[from].push_back({to, cost});
-    }
-    
-    void execute(ll s){
-        dist[s] = 0;
-        priority_queue pq([](Q l1, Q l2){return l1.dst > l2.dst;}, vector<Q>());
-        pq.push({0,s});
-        while(!pq.empty()){
-            Q l1 = pq.top();
-            pq.pop();
-            if(dist[l1.idx] < l1.dst) continue;
-            for(auto &e: tree[l1.idx]){
-                if(dist[e.to] <= dist[l1.idx] + e.d) continue;
-                dist[e.to] = dist[l1.idx] + e.d;
-                pq.push({dist[e.to], e.to});
+    ll dist[2010][2010];
+    ll H,W;
+    string a[2010];
+
+    Grid(){}
+
+    void bfs(P start){
+        Fill(dist, INF);
+        dist[start.h][start.w] = 0;
+        bool done[30] = {};
+        vector<P> pos[30];
+        rep(i,0,H){
+            rep(j,0,W){
+                if(a[i][j] >= 'a' && a[i][j] <= 'z'){
+                    pos[a[i][j]-'a'].push_back({i,j});
+                }
+            }
+        }
+
+        queue<P> que;
+        que.push(start);
+        while(not que.empty()){
+            P cur = que.front();
+            que.pop();
+            ll d_cur = dist[cur.h][cur.w];
+            rep(k,0,4){
+                P nxt = {cur.h + dh[k], cur.w + dw[k]};
+                if(in_map(nxt) && a[nxt.h][nxt.w] != '#' && dist[nxt.h][nxt.w] == INF){
+                    dist[nxt.h][nxt.w] = d_cur + 1;
+                    que.push(nxt); 
+                }
+            }
+            char c = a[cur.h][cur.w];
+            if(c >= 'a' && c <= 'z'){
+                if(done[c - 'a']) continue;
+                done[c - 'a'] = true;
+                for(auto &e: pos[c - 'a']){
+                    if(dist[e.h][e.w] == INF){
+                        dist[e.h][e.w] = d_cur + 1;
+                        que.push(e);
+                    }
+                }
+
             }
         }
     }
 
-    ll operator[](int x){
-        return dist[x];
+    bool in_map(P p){
+        if(p.h >= 0 && p.h < H && p.w >= 0 && p.w < W){
+            return true;
+        }
+        return false;
     }
 
+    void vis_map(){
+        rep(i,0,H){
+            rep(j,0,W){
+                if(a[i][j] == '#'){
+                    cout << "# ";
+                }else if(dist[i][j] == INF){
+                    cout << "x ";
+                }else{
+                    cout << left << setw(2) << dist[i][j];
+                }
+                cout << " \n"[j==W-1];
+            }
+        }  
+    }
+} grid;
 
-};
-Dijkstra<int> ds(200000), ds_inv(200000);
 
 void solve(){
-    ll N,M,T;
-    cin >> N >> M >> T;
-    ll A[100010];
-    rep(i,0,N) cin >> A[i];
-
-    rep(i,0,M){
-        ll a,b,c;
-        cin >> a >> b >> c;
-        a--; b--;
-        ds.add_edge(a, b, c);
-        ds_inv.add_edge(b, a, c);
+    ll H,W;
+    cin >> H >> W;
+    grid.H = H; grid.W = W;
+    rep(i,0,H) cin >> grid.a[i];
+    P start, goal;
+    rep(i,0,H){
+        rep(j,0,W){
+            if(grid.a[i][j] == 'S'){
+                start = {i,j};
+            }else if(grid.a[i][j] == 'G'){
+                goal = {i,j};
+            }
+        }
     }
-    ds.execute(0);
-    ds_inv.execute(0);
-    ll ans = 0;
-    rep(i,0,N){
-        ans = max(ans, (T - (ds[i] + ds_inv[i])) * A[i]);
-    }
-    print(ans);
 
+    grid.bfs(start);
+    // grid.vis_map();
+    if(grid.dist[goal.h][goal.w] == INF){
+        print(-1);
+    }else{
+        print(grid.dist[goal.h][goal.w]);
+    }
     
-
 }
 
 int main(){
