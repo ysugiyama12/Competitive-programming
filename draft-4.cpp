@@ -1,126 +1,191 @@
-/*** author: yuji9511 ***/
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;
-using lpair = pair<ll, ll>;
-const ll MOD = 1e9+7;
-const ll INF = 1e18;
-#define rep(i,m,n) for(ll i=(m);i<(n);i++)
-#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
-#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<" \n"[i==n-1];};
-void print() {}
-template <class H,class... T>
-void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-ll A[200010], B[200010];
-ll cntA[200010] = {}, cntB[200010] = {};
-vector<ll> pos[200010];
+template <class T> using vec = vector<T>;
+template <class T> using vvec = vector<vec<T>>;
+template<class T> bool chmin(T& a,T b){if(a>b) {a = b; return true;} return false;}
+template<class T> bool chmax(T& a,T b){if(a<b) {a = b; return true;} return false;}
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define drep(i,n) for(int i=(n)-1;i>=0;i--)
+#define all(x) (x).begin(),(x).end()
+#define debug(x)  cerr << #x << " = " << (x) << endl;
 
-void solve(){
-    ll N;
-    cin >> N;
-    rep(i,0,N) cin >> A[i];
-    rep(i,0,N) cin >> B[i];
-    rep(i,0,N){
-        pos[A[i]].push_back(i);
+constexpr ll inf = 1e18;
+
+template<class T,int MAX_LOG>
+class BinaryTrie{
+private:
+    BinaryTrie *ne[2];
+    T lazy;
+    ll val;
+    int child_num;
+    bool fill;
+    vec<int> accept;
+
+    void insert(const T &bit,int bit_id,int id,ll x){
+//        cerr << bit_id << " " << bit << " " << x << "\n";
+        propagate(bit_id);
+        if(bit_id==-1){
+            child_num++;
+            accept.push_back(id);
+        }else{
+            auto &to = ne[(bit>>bit_id)&1];
+            if(!to) to = new BinaryTrie();
+            to -> insert(bit,bit_id-1,id,x);
+            child_num++;
+            chmax(val,x);
+            if(ne[0]) chmax(val,ne[0]->val);
+            if(ne[1]) chmax(val,ne[1]->val);
+        }
     }
 
-    rep(i,0,N){
-        cntA[A[i]]++;
-        cntB[B[i]]++;
+    void insert(const T &bit,int id,ll x){
+        insert(bit,MAX_LOG,id,x);
     }
-    rep(i,0,N+1){
-        if(cntA[i] + cntB[i] > N){
-            print("No");
-            return;
-        }
-    }
-    vector<lpair> lp;
-    rep(i,0,N+1){
-        if(cntA[i] > 0 && cntB[i] > 0){
-            lp.push_back({N - cntA[i] - cntB[i], i});
+
+    void erase(const T &bit,int bit_id){
+        propagate(bit_id);
+        if(bit_id==-1){
+            child_num--;
+        }else{
+            assert(ne[(bit>>bit_id)&1]);
+            ne[(bit>>bit_id)&1]->erase(bit,bit_id-1);
+            child_num--;
         }
     }
 
-    sort(lp.begin(), lp.end(), [&](lpair l1, lpair l2){
-        if(l1.first == l2.first){
-            return cntB[l1.second] < cntB[l2.second];
-        }
-        return l1.first < l2.first;
-    });
+    pair<T,BinaryTrie*> max_element(const T& x,int bit_id){
+        propagate(bit_id);
+        if(bit_id==-1) return {0,this};
+        bool f = (x>>bit_id)&1;
+        f ^= 1;
+        f ^= !(ne[f] && ne[f]->size());
+        auto res = ne[f]->max_element(x,bit_id-1);
+        res.first |= T(f)<<bit_id;
+        return res;
+    }
 
-    queue<ll> que;
-    vector<lpair> v;
-    if(lp.size() == 0){
-        print("Yes");
-        printa(B,N);
-        return;
+    pair<T,BinaryTrie*> min_element(const T &x,int bit_id){
+        propagate(bit_id);
+        if(bit_id==-1) return {0,this};
+        bool f = (x>>bit_id)&1;
+        f ^= !(ne[f] && ne[f]->size());
+        auto res = ne[f]->min_element(x,bit_id-1);
+        res.first |= T(f)<<bit_id;
+        return res;
     }
-    rep(i,0,N){
-        if(A[i] != lp[0].second){
-            v.push_back({N- cntB[A[i]], i});
-        }
-    }
-    sort(v.begin(), v.end());
-    for(auto &e: v){
-        que.push(e.second);
-    }
-    ll ans[200010] = {};
-    ll idx = 0;
-    for(auto &e: lp){
-        // print(e.second);
-        // printa(ans, N);
-        ll n = cntB[e.second];
-        vector<ll> mine;
-        while(n--){
-            ll q;
-            while(true){
-                q = que.front();
-                if(A[q] == e.second){
-                    que.push(q);
-                    que.pop();
-                }else{
-                    que.pop();
-                    break;
-                }
-            }
-            // ll q = que.front();
-            // if(A[q] == e.second){
 
-            // }
-            // que.pop();
-            ans[q] = e.second;
+    pair<T,BinaryTrie*> kth_element(ll k,int bit_id){
+        propagate(bit_id);
+        if(bit_id==-1) return {0,this};
+        ll small = (ne[0]? ne[0]->size():0);
+        if(small<k){
+            auto res = ne[1]->kth_element(k-small,bit_id-1);
+            res.first |= T(1)<<bit_id;
+            return res;
+        }else{
+            return ne[0]->kth_element(k,bit_id-1);
         }
-        if(idx == 0){
-            for(auto &f: pos[e.second]){
-                if(ans[f] == 0){
-                    que.push(f);
-                }
-            }
-        }
-        idx++;
     }
-    stack<ll> st;
 
-    rep(i,0,N){
-        if(cntA[B[i]] == 0 && cntB[B[i]] > 0){
-            st.push(B[i]);
-        }
-    }
-    rep(i,0,N){
-        if(ans[i] == 0){
-            ans[i] = st.top();
-            st.pop();
-        }
-    }
-    print("Yes");
-    printa(ans, N);
+public:
+    BinaryTrie():child_num(0),lazy(0),val(-inf),ne{nullptr,nullptr}{}
 
+    void insert(const T &bit,ll x){
+        insert(bit,child_num,x);
+    }
+
+    void erase(const T &bit){
+        erase(bit,MAX_LOG);
+    }
+
+    T max_element(const T x=0){
+        assert(child_num);
+        return max_element(x,MAX_LOG).first;
+    }
+
+    T min_element(const T x=0){
+        assert(child_num);
+        return min_element(x,MAX_LOG).first;
+    }
+
+    //k is 1-indexed
+    T kth_element(ll k){
+        assert(0<k && k<=size());
+        return kth_element(k,MAX_LOG).first;
+    }
+
+    int size() const{
+        return child_num;
+    }
+
+    void search(T bit,int bit_id,ll &ma){
+        if(bit_id==-1) return ;
+        propagate(bit_id);
+        if(bit_id==0){
+            if(!(bit>>bit_id&1)) chmax(ma,val);
+        }
+        if(bit>>bit_id&1){
+            if(ne[0]) chmax(ma,ne[0]->val);
+            if(ne[1]) ne[1]->search(bit,bit_id-1,ma);
+        }else{
+            if(ne[0]) ne[0]->search(bit,bit_id-1,ma);
+        }
+    }
+
+    void search(T bit,ll &ma){
+        search(bit,MAX_LOG,ma);
+    }
+
+    void xorpush(const T &bit){
+        lazy ^= bit;
+    }
+
+    void propagate(int bit_id){
+        if((lazy>>bit_id)&1) swap(ne[0],ne[1]);
+        if(ne[0]) ne[0]->lazy ^= lazy;
+        if(ne[1]) ne[1]->lazy ^= lazy;
+        lazy = 0;
+    }
     
+};
 
-}
+
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    solve();
+    int N,M;
+    cin >> N >> M;
+    vec<int> A(N),B(N);
+    rep(i,N) cin >> A[i];
+    rep(i,N) cin >> B[i];
+    int n = N/2;
+    int n2 = N-n;
+    vec<ll> table(1<<n,-inf);
+    ll ans = -inf;
+    rep(S,1<<n){
+        ll b = 0;
+        int x = 0;
+        rep(i,n) if(S>>i&1) b += B[i],x ^= A[i];
+        chmax(table[x],b);
+        if(x<=M) chmax(ans,b);
+    }
+    BinaryTrie<ll,60> trie;
+    rep(i,1<<n){
+        trie.insert(i,table[i]);
+    }
+    rep(S,1<<n2){
+        ll b = 0;
+        int x = 0;
+        rep(i,n2) if(S>>i&1) b += B[n+i],x ^= A[n+i];
+        if(x<=M) chmax(ans,b);
+        ll ma = -inf;
+        trie.xorpush(x);
+        trie.search(M,ma);
+//        cerr << S << " " << b << " " << ma << " " << x << "\n";
+        chmax(ans,b+ma);
+        trie.xorpush(x);
+    }
+    cout << ans << "\n";
 }

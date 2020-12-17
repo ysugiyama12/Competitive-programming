@@ -37,8 +37,11 @@ public:
         dist.assign(N, INF);
     }
 
-    void add_edge(ll from, ll to, T cost){
+    void add_edge(ll from, ll to, T cost, bool inv=false){
         tree[from].push_back({to, cost});
+        if(inv){
+            tree[to].push_back({from, cost});
+        }
     }
     
     void execute(ll s){

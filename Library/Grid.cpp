@@ -14,10 +14,6 @@ void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 #define debug(x) cout << #x << " = " << (x) << " (L" << __LINE__ << ")" << "\n"
-template<typename A, size_t N, typename T>
-void Fill(A (&array)[N], const T &val){
-    std::fill( (T*)array, (T*)(array+N), val );
-}
 
 typedef struct {
     ll h,w;
@@ -38,8 +34,7 @@ public:
 
     void init(ll h, ll w){
         H = h; W = w;
-        dist.resize(H+1, vector<ll>(W+1));
-        rep(i,0,H) rep(j,0,W) dist[i][j] = INF;
+        dist.resize(H+1, vector<ll>(W+1, INF));
         a.resize(H+1);
     }
 

@@ -13,24 +13,24 @@ template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 #define debug(x) cout << #x << " = " << (x) << " (L" << __LINE__ << ")" << "\n"
 
-int ceil_pow2(int n) {
-    int x = 0;
-    while ((1U << x) < (unsigned int)(n)) x++;
-    return x;
-}
-
 template <class S, S (*op)(S, S), S (*e)()> struct segtree {
   public:
     segtree() : segtree(0) {}
-    segtree(int n) : segtree(std::vector<S>(n, e())) {}
-    segtree(const std::vector<S>& v) : _n(int(v.size())) {
+    segtree(int n) : segtree(vector<S>(n, e())) {}
+    segtree(const vector<S>& v) : _n(int(v.size())) {
         log = ceil_pow2(_n);
         size = 1 << log;
-        d = std::vector<S>(2 * size, e());
+        d = vector<S>(2 * size, e());
         for (int i = 0; i < _n; i++) d[size + i] = v[i];
         for (int i = size - 1; i >= 1; i--) {
             update(i);
         }
+    }
+
+    int ceil_pow2(int n) {
+        int x = 0;
+        while ((1U << x) < (unsigned int)(n)) x++;
+        return x;
     }
 
     void set(int p, S x) {
@@ -118,15 +118,38 @@ template <class S, S (*op)(S, S), S (*e)()> struct segtree {
 
   private:
     int _n, size, log;
-    std::vector<S> d;
+    vector<S> d;
 
     void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
 };
 
+// Segtree configuration
+using S = ll;
+S op(S a, S b){
+    return min(a, b);
+}
 
-
+S e(){
+    return INF;
+}
 
 void solve(){
+    ll N,Q;
+    cin >> N >> Q;
+    vector<S> v(N, (1LL<<31)-1);
+
+    segtree<S, op, e> sg(v);
+    while(Q--){
+        ll p,x,y;
+        cin >> p >> x >> y;
+        if(p == 0){
+            sg.set(x, y);
+        }else{
+            S ans = sg.prod(x, y+1);
+            print(ans);
+        }
+    }
+
     
 }
 

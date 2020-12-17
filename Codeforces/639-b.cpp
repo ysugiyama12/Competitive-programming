@@ -101,6 +101,7 @@ int main(){
     }
     ll ans = mp.size();
     bool ok = true;
+    
     rep(i,0,N){
         ll cnt = 0;
         rep(j,0,M-1){

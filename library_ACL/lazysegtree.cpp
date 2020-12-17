@@ -1,5 +1,7 @@
 /*** author: yuji9511 ***/
 #include <bits/stdc++.h>
+// #include <atcoder/all>
+// using namespace atcoder;
 using namespace std;
 using ll = long long;
 using lpair = pair<ll, ll>;
@@ -11,13 +13,6 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-#define debug(x) cout << #x << " = " << (x) << " (L" << __LINE__ << ")" << "\n"
-
-int ceil_pow2(int n) {
-    int x = 0;
-    while ((1U << x) < (unsigned int)(n)) x++;
-    return x;
-}
 
 template <class S,
           S (*op)(S, S),
@@ -29,16 +24,22 @@ template <class S,
 struct lazy_segtree {
   public:
     lazy_segtree() : lazy_segtree(0) {}
-    lazy_segtree(int n) : lazy_segtree(std::vector<S>(n, e())) {}
-    lazy_segtree(const std::vector<S>& v) : _n(int(v.size())) {
+    lazy_segtree(int n) : lazy_segtree(vector<S>(n, e())) {}
+    lazy_segtree(const vector<S>& v) : _n(int(v.size())) {
         log = ceil_pow2(_n);
         size = 1 << log;
-        d = std::vector<S>(2 * size, e());
-        lz = std::vector<F>(size, id());
+        d = vector<S>(2 * size, e());
+        lz = vector<F>(size, id());
         for (int i = 0; i < _n; i++) d[size + i] = v[i];
         for (int i = size - 1; i >= 1; i--) {
             update(i);
         }
+    }
+
+    int ceil_pow2(int n) {
+        int x = 0;
+        while ((1U << x) < (unsigned int)(n)) x++;
+        return x;
     }
 
     void set(int p, S x) {
@@ -178,8 +179,8 @@ struct lazy_segtree {
 
   private:
     int _n, size, log;
-    std::vector<S> d;
-    std::vector<F> lz;
+    vector<S> d;
+    vector<F> lz;
 
     void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
     void all_apply(int k, F f) {
@@ -193,8 +194,56 @@ struct lazy_segtree {
     }
 };
 
+// Configuration of lazy segtree
+typedef struct {
+    ll value;
+    ll length;
+} S;
+
+using F = ll;
+
+S op(S a, S b){
+    return {a.value + b.value, a.length + b.length};
+}
+
+S mapping(F f, S a){
+    return {a.value + f * a.length, a.length};
+}
+
+F composition(F f, F g){ // (f・g)(x) = f(g(x))
+    return f + g;
+}
+
+S e(){
+    return {0,0};
+}
+
+F id(){
+    return 0LL;
+}
+
+// http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_G&lang=jp
 void solve(){
-    
+    ll N,Q;
+    cin >> N >> Q;
+    vector<S> v(N, {0,1});
+    lazy_segtree<S, op, e, F, mapping, composition, id> sg(v);
+    while(Q--){
+        ll p,s,t;
+        cin >> p >> s >> t;
+        s--; t--;
+        if(p == 0){
+            ll x;
+            cin >> x;
+            sg.apply(s, t+1, x);
+        }else{
+            S res = sg.prod(s, t+1);
+            ll ans = res.value;
+            print(ans);
+
+        }
+    } 
+
 }
 
 int main(){

@@ -154,6 +154,34 @@ bool isCube(ll x){
 	}
 }
 
+vector<ll> compress(vector<ll> x){
+	vector<ll> v = x;
+    v.push_back(-INF);
+    v.push_back(INF);
+    sort(v.begin(), v.end());
+    v.erase(unique(v.begin(), v.end()), v.end());
+    vector<ll> res;
+    for(auto &e: x){
+        res.push_back(lower_bound(v.begin(), v.end(), e) - v.begin());
+    }
+    return res;
+}
+
+void vis_2d(vector< vector<ll> > v, ll h, ll w, ll pad=4){
+    cout <<  "ij "; rep(i,0,w) cout << left << setw(pad) << i; cout << endl;
+    rep(i,0,h){
+        cout << i << ": ";
+        rep(j,0,w){ if(v[i][j] == INF) cout << "x" << string(pad-1, ' '); else cout << left << setw(pad) << v[i][j]; }
+        cout << endl;
+    }
+}
+
+template<typename A, size_t N, typename T>
+void Fill(A (&array)[N], const T &val){
+    std::fill( (T*)array, (T*)(array+N), val );
+}
+
+
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
