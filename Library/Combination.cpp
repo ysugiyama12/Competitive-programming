@@ -1,15 +1,19 @@
 /*** author: yuji9511 ***/
 #include <bits/stdc++.h>
+// #include <atcoder/all>
+// using namespace atcoder;
 using namespace std;
-typedef long long ll;
-typedef pair<ll, ll> lpair;
-const ll MOD = 1e9 + 7;
+using ll = long long;
+using lpair = pair<ll, ll>;
+using vll = vector<ll>;
+const ll MOD = 1e9+7;
 const ll INF = 1e18;
-#define rep(i,m,n) for(ll i = (m); i < (n); i++)
-#define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
-#define print(x) cout << (x) << endl;
-#define print2(x,y) cout << (x) << " " << (y) << endl;
-#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i==n-1];};
+#define rep(i,m,n) for(ll i=(m);i<(n);i++)
+#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
+#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<" \n"[i==n-1];};
+void print() {}
+template <class H,class... T>
+void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
 struct Combination{
 private:
@@ -47,6 +51,36 @@ public:
         if(k == 0) return 1LL;
         if(n < k) return 0LL;
         return fac[n] * facinv[n-k] % MOD;
+    }
+};
+
+struct Combination_pascal{
+private:
+    ll N;
+public:
+    vector<vll> dp;
+
+    Combination_pascal(ll n){
+        N = n;
+        dp.assign(N+1, vll(N+1, -1));
+        rep(i,0,N+1){
+            dp[i][0] = 1;
+            dp[i][i] = 1;
+        }
+    }
+
+    ll calc(ll i, ll j){
+        ll &res = dp[i][j];
+        if(~res) return res;
+        res = 0;
+        res = calc(i-1, j-1) + calc(i-1, j);
+        return res;
+    }
+
+    ll nck(ll n, ll k){
+        if(k == 0 || n == k) return 1LL;
+        if(n < k) return 0LL;
+        return calc(n,k);
     }
 };
 

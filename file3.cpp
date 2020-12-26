@@ -16,12 +16,12 @@ template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
 void solve(){
-	
+    
 
 }
 
 int main(){
-	cin.tie(0);
-	ios::sync_with_stdio(false);
-	solve();
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    solve();
 }

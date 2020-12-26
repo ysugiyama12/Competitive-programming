@@ -27,7 +27,7 @@ private:
         ll idx;
     } Q;
 
-    vector<P> tree[200010];
+    vector< vector<P> > tree;
     ll N;
     vector<T> dist;
 
@@ -35,6 +35,7 @@ public:
     Dijkstra(ll n){
         N = n;
         dist.assign(N, INF);
+        tree.resize(N+1);
     }
 
     void add_edge(ll from, ll to, T cost, bool inv=false){

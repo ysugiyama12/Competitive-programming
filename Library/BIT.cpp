@@ -11,7 +11,7 @@ const ll INF = 1e18;
 #define print2(x,y) cout << (x) << " " << (y) << endl;
 #define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i==n-1];};
 
-struct BIT { //1-indexed
+struct BIT {
 private:
     int n,n2;
     vector<ll> bit;
@@ -19,12 +19,13 @@ private:
 public:
     BIT(ll N){
         n = N;
-        bit.assign(n+1, 0);
+        bit.assign(n+5, 0);
         n2 = 1;
         while(n2 * 2 <= n) n2 *= 2;
     }
 
     ll sum(ll x){ //[1, x]
+        x++;
         ll res = 0;
         for(ll i = x; i > 0; i -= i & -i) res += bit[i];
         return res;
@@ -35,7 +36,7 @@ public:
     }
 
     void add(ll x, ll v){
-        if(x == 0) return;
+        x++;
         for(ll i = x; i <= n; i += i & -i) bit[i] += v;
     }
 

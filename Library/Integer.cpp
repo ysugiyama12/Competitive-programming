@@ -23,32 +23,29 @@ bool isPrime(ll x){
 }
 
 vector<ll> divisor(ll M){
-    vector<ll> dd;
+    vector<ll> div;
     for(ll i = 1; i * i <= M; i++){
         if(M % i == 0){
-            dd.push_back(i);
-            if(i * i != M) dd.push_back(M / i);
+            div.push_back(i); if(i * i != M) div.push_back(M / i);
         }
     }
-    sort(dd.begin(), dd.end());
-    return dd;
+    sort(div.begin(), div.end());
+    return div;
 }
 
-vector<ll> factor(ll M){ //素因数分解
-    vector<ll> dd;
+vector<ll> factor(ll M){
+    vector<ll> fac;
     if(M == 1){
-        dd.push_back(1);
-        return dd;
+        fac.push_back(1); return fac;
     }
     for(ll i = 2; i*i <= M; i++){
         while(M % i == 0){
-            dd.push_back(i);
-            M /= i;
+            fac.push_back(i); M /= i;
         }
     }
-    if(M != 1) dd.push_back(M);
-    sort(dd.begin(), dd.end());
-    return dd;
+    if(M != 1) fac.push_back(M);
+    sort(fac.begin(), fac.end());
+    return fac;
 }
 
 bool isSquare(ll x){
@@ -80,9 +77,6 @@ vector<ll> sieve(ll n){ //エラトステネス
         }
     }
     return prime;
-    rep(i,0,(1<<60)){
-        print(i);
-    }
 }
 
 int main(){

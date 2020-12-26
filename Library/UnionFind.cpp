@@ -20,9 +20,10 @@ private:
 public:
     UnionFind(ll n){
         N = n;
-        rep(i,0,N) parent.push_back(i);
-        rep(i,0,N) num.push_back(1);
-        rep(i,0,N) diff_weight.push_back(0);
+        parent.resize(N);
+        iota(parent.begin(), parent.end(), 0);
+        num.assign(N, 1);
+        diff_weight.assign(N, 0);
     }
 
     ll root(ll x){

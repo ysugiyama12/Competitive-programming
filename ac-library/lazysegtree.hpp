@@ -1,19 +1,13 @@
-/*** author: yuji9511 ***/
-#include <bits/stdc++.h>
-// #include <atcoder/all>
-// using namespace atcoder;
-using namespace std;
-using ll = int;
-using lpair = pair<ll, ll>;
-using vll = vector<ll>;
-const ll MOD = 1e9+7;
-// const ll INF = 1e18;
-#define rep(i,m,n) for(ll i=(m);i<(n);i++)
-#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
-#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<" \n"[i==n-1];};
-void print() {}
-template <class H,class... T>
-void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+#ifndef ATCODER_LAZYSEGTREE_HPP
+#define ATCODER_LAZYSEGTREE_HPP 1
+
+#include <algorithm>
+#include <atcoder/internal_bit>
+#include <cassert>
+#include <iostream>
+#include <vector>
+namespace atcoder {
+
 template <class S,
           S (*op)(S, S),
           S (*e)(),
@@ -24,22 +18,16 @@ template <class S,
 struct lazy_segtree {
   public:
     lazy_segtree() : lazy_segtree(0) {}
-    lazy_segtree(int n) : lazy_segtree(vector<S>(n, e())) {}
-    lazy_segtree(const vector<S>& v) : _n(int(v.size())) {
-        log = ceil_pow2(_n);
+    lazy_segtree(int n) : lazy_segtree(std::vector<S>(n, e())) {}
+    lazy_segtree(const std::vector<S>& v) : _n(int(v.size())) {
+        log = internal::ceil_pow2(_n);
         size = 1 << log;
-        d = vector<S>(2 * size, e());
-        lz = vector<F>(size, id());
+        d = std::vector<S>(2 * size, e());
+        lz = std::vector<F>(size, id());
         for (int i = 0; i < _n; i++) d[size + i] = v[i];
         for (int i = size - 1; i >= 1; i--) {
             update(i);
         }
-    }
-
-    int ceil_pow2(int n) {
-        int x = 0;
-        while ((1U << x) < (unsigned int)(n)) x++;
-        return x;
     }
 
     void set(int p, S x) {
@@ -179,8 +167,8 @@ struct lazy_segtree {
 
   private:
     int _n, size, log;
-    vector<S> d;
-    vector<F> lz;
+    std::vector<S> d;
+    std::vector<F> lz;
 
     void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
     void all_apply(int k, F f) {
@@ -194,106 +182,6 @@ struct lazy_segtree {
     }
 };
 
-// Configuration of lazy segtree
-typedef struct {
-    ll value;
-    ll length;
-} S;
+}  // namespace atcoder
 
-using F = ll;
-
-S op(S a, S b){
-    return {a.value + b.value, a.length + b.length};
-}
-
-S mapping(F f, S a){
-    return {a.value + f * a.length, a.length};
-}
-
-F composition(F f, F g){ // (f・g)(x) = f(g(x))
-    return f + g;
-}
-
-S e(){
-    return {0,0};
-}
-
-F id(){
-    return 0LL;
-}
-
-vector<vll> tree;
-vll v_begin, v_end;
-vll euler;
-
-void solve(){
-    ll N,Q;
-    cin >> N >> Q;
-    vll a(N);
-    tree.resize(N);
-    v_begin.assign(N, 0);
-    v_end.assign(N, 0);
-
-    rep(i,0,N) cin >> a[i];
-    rep(i,0,N-1){
-        ll u,v;
-        cin >> u >> v;
-        u--; v--;
-        tree[u].push_back(v);
-        tree[v].push_back(u);
-    }
-    ll idx = 0;
-    auto dfs = [&](auto dfs, ll cur, ll par) -> void {
-        v_begin[cur] = idx;
-        euler.push_back(cur);
-        idx++;
-        for(auto &e: tree[cur]){
-            if(e == par) continue;
-            dfs(dfs, e, cur);
-            euler.push_back(cur);
-            idx++;
-        }
-        v_end[cur] = idx;
-    };
-
-    dfs(dfs, 0, -1);
-    vector<S> v(euler.size());
-    rep(i,0,euler.size()) v[i] = {a[euler[i]], 1};
-    lazy_segtree<S, op, e, F, mapping, composition, id> sg_odd(v), sg_even(v);
-    while(Q--){
-        ll t;
-        cin >> t;
-        if(t == 1){
-            ll x,val;
-            cin >> x >> val;
-            x--;
-            if(v_begin[x] % 2 == 0){
-                sg_even.apply(v_begin[x], v_end[x], val);
-                sg_odd.apply(v_begin[x], v_end[x], -val);
-            }else{
-                sg_even.apply(v_begin[x], v_end[x], -val);
-                sg_odd.apply(v_begin[x], v_end[x], val);   
-            }
-        }else{
-            ll x;
-            cin >> x;
-            x--;
-            if(v_begin[x] % 2 == 0){
-                ll ans = sg_even.get(v_begin[x]).value;
-                print(ans);
-            }else{
-                ll ans = sg_odd.get(v_begin[x]).value;
-                print(ans);       
-            }
-        }
-    }
-
-
-
-}
-
-int main(){
-    cin.tie(0);
-    ios::sync_with_stdio(false);
-    solve();
-}
+#endif  // ATCODER_LAZYSEGTREE_HPP

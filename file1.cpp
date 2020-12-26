@@ -5,6 +5,7 @@
 using namespace std;
 using ll = long long;
 using lpair = pair<ll, ll>;
+using vll = vector<ll>;
 const ll MOD = 1e9+7;
 const ll INF = 1e18;
 #define rep(i,m,n) for(ll i=(m);i<(n);i++)

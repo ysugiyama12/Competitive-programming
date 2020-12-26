@@ -1,8 +1,11 @@
 /*** author: yuji9511 ***/
 #include <bits/stdc++.h>
+// #include <atcoder/all>
+// using namespace atcoder;
 using namespace std;
 using ll = long long;
 using lpair = pair<ll, ll>;
+using vll = vector<ll>;
 const ll MOD = 1e9+7;
 const ll INF = 1e18;
 #define rep(i,m,n) for(ll i=(m);i<(n);i++)
@@ -11,99 +14,57 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-// verify: https://atcoder.jp/contests/past201912-open/submissions/12485980
-
+// https://atcoder.jp/contests/past201912-open/submissions/18997721
+template< typename G >
 struct LCA {
-private:
-    ll N;
-    vector<int> tree[200010];
-    ll logN;
-    vector<int> parent;
-    vector<int> depth;
-    int next_val[20][200010] = {};
-    ll p;
-public:
+    const int LOG;
+    vector<int> dep;
+    const G &g;
+    vector< vector<int> > table;
 
-    LCA(ll n){
-        N = n;
-        logN = floor(log2(N)) + 1;
-        parent.assign(N, 0);
-        depth.assign(N, 0);
+    LCA(const G &g) : g(g), dep(g.size()), LOG(32 - __builtin_clz(g.size())) {
+        table.assign(LOG, vector<int>(g.size(), -1));
     }
 
-    void add_edge(ll from, ll to){
-        tree[from].push_back(to);
-    }
-
-    void build(ll pa = 0){
-        p = pa;
-        dfs(p, -1, 0);
-        rep(i,0,N){
-            next_val[0][i] = parent[i];
+    void dfs(int idx, int par, int d) {
+        table[0][idx] = par;
+        dep[idx] = d;
+        for(auto &to : g[idx]) {
+            if(to != par) dfs(to, idx, d + 1);
         }
-        rep(k,0,logN){
-            rep(i,0,N){
-                if(next_val[k][i] == -1){
-                    next_val[k+1][i] = -1;
-                }else{
-                    next_val[k+1][i] = next_val[k][next_val[k][i]];
-                }
+    }
+
+    void build(int par = 0) {
+        dfs(par, -1, 0);
+        for(int k = 0; k + 1 < LOG; k++) {
+            for(int i = 0; i < table[k].size(); i++) {
+                if(table[k][i] == -1) table[k + 1][i] = -1;
+                else table[k + 1][i] = table[k][table[k][i]];
             }
         }
     }
 
-    void dfs(ll cur, ll par, ll d){
-        depth[cur] = d;
-        parent[cur] = par;
-        for(auto &e: tree[cur]){
-            if(e == par) continue;
-            dfs(e, cur, d+1);
+    int query(int u, int v) {
+        if(dep[u] > dep[v]) swap(u, v);
+        for(int i = LOG - 1; i >= 0; i--) {
+            if(((dep[v] - dep[u]) >> i) & 1) v = table[i][v];
         }
-    }
-
-    ll getParent(ll cur, ll num) {
-        ll p = cur;
-        rrep(k,logN-1, 0){
-            if(p == -1){
-                break;
-            }
-            if((num >> k) & 1){
-                p = next_val[k][p];
+        if(u == v) return u;
+        for(int i = LOG - 1; i >= 0; i--) {
+            if(table[i][u] != table[i][v]) {
+                u = table[i][u];
+                v = table[i][v];
             }
         }
-        return p;
-    }
-
-    ll getLCA(ll va, ll vb){
-        if(depth[va] > depth[vb]){
-            va = getParent(va, depth[va] - depth[vb]);
-        }else if(depth[va] < depth[vb]){
-            vb = getParent(vb, depth[vb] - depth[va]);
-        }
-        ll lv = -1, rv = N+1;
-        while(rv - lv > 1){
-            ll mid = (rv + lv) / 2;
-            ll ta = getParent(va, mid);
-            ll tb = getParent(vb, mid);
-            if(ta == -1 || tb == -1){
-                rv = mid;
-            }else if(ta != tb){
-                lv = mid;
-            }else{
-                rv = mid;
-            }
-        }
-        return getParent(va, rv);
+        return table[0][u];
     }
 };
-LCA lca(200000);
 
-int main(){
-    cin.tie(0);
-    ios::sync_with_stdio(false);
+void solve(){
     ll N;
     cin >> N;
     ll par = -1;
+    vector<vector<int> > tree(N);
     rep(i,0,N){
         ll p;
         cin >> p;
@@ -111,10 +72,11 @@ int main(){
             par = i;
         }else{
             p--;
-            lca.add_edge(i, p);
-            lca.add_edge(p, i);
+            tree[i].push_back(p);
+            tree[p].push_back(i);
         }
     }
+    LCA lca(tree);
     lca.build(par);
     ll Q;
     cin >> Q;
@@ -123,11 +85,17 @@ int main(){
         ll a,b;
         cin >> a >> b;
         a--; b--;
-        if(lca.getLCA(a,b) == b){
+        if(lca.query(a,b) == b){
             print("Yes");
         }else{
             print("No");
         }
     }
 
+}
+
+int main(){
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    solve();
 }
