@@ -1,62 +1,65 @@
+/*** author: yuji9511 ***/
 #include <bits/stdc++.h>
+// #include <atcoder/all>
+// using namespace atcoder;
 using namespace std;
-typedef long long ll;
-typedef pair<ll, ll> lpair;
-const ll MOD = 1e9 + 7;
+using ll = long long;
+using lpair = pair<ll, ll>;
+using vll = vector<ll>;
+const ll MOD = 1e9+7;
 const ll INF = 1e18;
-#define rep(i,m,n) for(ll i = (m); i < (n); i++)
-#define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
-#define print(x) cout << (x) << endl;
-#define print2(x,y) cout << (x) << " " << (y) << endl;
-#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " ";} cout<<endl;
-ll dp[16][1LL<<16];
-ll s[200], t[200], d[200];
- 
-int main(){
-    // tsp: 巡回セールスマン
-    cin.tie(0);
-    ios::sync_with_stdio(false);
-    ll N,M;
-    cin >> N >> M;
-    ll dist[20][20] = {};
-    rep(i,0,N){
-        rep(j,0,N){
-            if(i == j) dist[i][j] = 0;
-            else dist[i][j] = INF;
-        }
+#define rep(i,m,n) for(ll i=(m);i<(n);i++)
+#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
+ostream& operator<<(ostream& os, lpair& h){ os << "(" << h.first << ", " << h.second << ")"; return os;}
+#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<" \n"[i==n-1];};
+void print() {}
+template <class H,class... T>
+void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+
+void solve(){
+    ll V,E;
+    cin >> V >> E;
+    vector<vll> dist(V+1, vll(V+1, -1));
+
+    rep(i,0,E){
+        ll s,t,d;
+        cin >> s >> t >> d;
+        dist[s][t] = d;
     }
-    rep(i,0,M){
-        cin >> s[i] >> t[i] >> d[i];
-        dist[s[i]][t[i]] = d[i];
-    }
-    rep(i,0,N){
-        rep(j,0,(1LL<<N)){
-            dp[i][j] = INF;
-        }
-    }
-    dp[0][1] = 0; //dp[i][j]: 今iにいて訪れたことのある頂点集合がjの時の最短距離
-    rep(bit,0,(1LL<<N)){
-        rep(i,0,N){
+
+    vector<vll> dp(V+1, vll(1LL<<V, INF));
+
+    dp[0][1] = 0;
+
+    rep(bit,0,1LL<<V){
+        rep(i,0,V){
             if(dp[i][bit] == INF) continue;
-            rep(j,0,N){
-                if((bit>>j) & 1) continue;
+            rep(j,0,V){
+                if(bit & (1LL<<j)) continue;
+                if(dist[i][j] == -1) continue;
                 dp[j][bit | (1LL<<j)] = min(dp[j][bit | (1LL<<j)], dp[i][bit] + dist[i][j]);
             }
         }
     }
+
     ll ans = INF;
-    rep(i,0,N){
-        ans = min(ans, dp[i][(1LL<<N)-1] + dist[i][0]);
+    rep(i,0,V){
+        if(dist[i][0] == -1) continue;
+        ans = min(ans, dp[i][(1LL<<V)-1] + dist[i][0]);
     }
+
     if(ans == INF){
         print(-1);
     }else{
         print(ans);
     }
-    vector<ll> hoge;
-    for(&e: hoge){
-        
-    }
- 
-     
+
+    
+
+}
+
+int main(){
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    solve();
 }

@@ -1,15 +1,20 @@
+/*** author: yuji9511 ***/
 #include <bits/stdc++.h>
-typedef long long ll;
-#define rep(i,m,n) for(ll i = (m); i < (n); i++)
-#define rrep(i,m,n) for(ll i = (m); i >= (n); i--)
-#define print(x) cout << (x) << endl;
-#define print2(x,y) cout << (x) << " " << (y) << endl;
-#define printa(x,n) for(ll i = 0; i < n; i++){ cout << (x[i]) << " \n"[i == n-1];}
-#define printp(x,n) for(ll i = 0; i < n; i++){ cout << "(" << x[i].first << ", " << x[i].second << ") "; } cout << endl;
-#define INF (1e18)
+// #include <atcoder/all>
+// using namespace atcoder;
 using namespace std;
-const ll MOD = 1e9 + 7;
-typedef pair<ll, ll> lpair;
+using ll = long long;
+using lpair = pair<ll, ll>;
+using vll = vector<ll>;
+const ll MOD = 1e9+7;
+const ll INF = 1e18;
+#define rep(i,m,n) for(ll i=(m);i<(n);i++)
+#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
+ostream& operator<<(ostream& os, lpair& h){ os << "(" << h.first << ", " << h.second << ")"; return os;}
+#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<" \n"[i==n-1];};
+void print() {}
+template <class H,class... T>
+void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
 vector<string> split(string str, char del) { //文字列分割
     ll first = 0;
@@ -101,58 +106,6 @@ pair<ll, string> longest_palindrome(string text) {
     //   return *max_element(rad, rad+2*n); // ret. centre of the longest palindrome
 }
 
-vector<ll> sieve(ll n){ //エラトステネス
-    vector<bool> is_prime(n+1);
-    vector<ll> prime;
-    rep(i,0,n+1) is_prime[i] = true;
-    is_prime[0] = is_prime[1] = false;
-    rep(i,2,n+1){
-        if(is_prime[i]){
-            prime.push_back(i);
-            for(int j = 2 * i; j <= n; j += i) is_prime[j] = false;
-        }
-    }
-    return prime;
-}
-
-
-bool isSquare(ll x){
-	ll lv = 0, rv = x+1;
-	while(rv - lv > 1){
-		ll mid = (lv + rv) / 2;
-		if(mid >= 1e9){
-			rv = mid;
-		}else if(mid * mid >= x){
-			rv = mid;
-		}else{
-			lv = mid;
-		}
-	}
-	if(rv * rv == x){
-		return true;
-	}else{
-		return false;
-	}
-}
-
-bool isCube(ll x){
-	ll lv = 0, rv = x+1;
-	while(rv - lv > 1){
-		ll mid = (lv + rv) / 2;
-		if(mid >= 1e6){
-			rv = mid;
-		}else if(mid * mid * mid >= x){
-			rv = mid;
-		}else{
-			lv = mid;
-		}
-	}
-	if(rv * rv * rv == x){
-		return true;
-	}else{
-		return false;
-	}
-}
 
 vector<ll> compress(vector<ll> x){
 	vector<ll> v = x;

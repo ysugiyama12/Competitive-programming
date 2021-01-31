@@ -56,6 +56,7 @@ struct lazy_segtree {
         for (int i = log; i >= 1; i--) push(p >> i);
         return d[p];
     }
+    
 
     S prod(int l, int r) {
         assert(0 <= l && l <= r && r <= _n);
@@ -194,30 +195,24 @@ struct lazy_segtree {
     }
 };
 
-// Configuration of lazy segtree
+// Configuration of lazy segtree (range add, range sum)
 typedef struct {
     ll value;
     ll length;
 } S;
-
 using F = ll;
-
 S op(S a, S b){
     return {a.value + b.value, a.length + b.length};
 }
-
 S mapping(F f, S a){
     return {a.value + f * a.length, a.length};
 }
-
 F composition(F f, F g){ // (f・g)(x) = f(g(x))
     return f + g;
 }
-
 S e(){
     return {0,0};
 }
-
 F id(){
     return 0LL;
 }

@@ -1,18 +1,20 @@
 /*** author: yuji9511 ***/
 #include <bits/stdc++.h>
+#include <atcoder/all>
+using namespace atcoder;
 using namespace std;
-using ll = long long;
+using ll = int;
 using lpair = pair<ll, ll>;
+using vll = vector<ll>;
 const ll MOD = 1e9+7;
-const ll INF = 1e18;
+// const ll INF = 1e18;
 #define rep(i,m,n) for(ll i=(m);i<(n);i++)
 #define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
 #define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<" \n"[i==n-1];};
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-
-// verify: https://yukicoder.me/submissions/476102
+// https://atcoder.jp/contests/past202010-open/submissions/19013635
 class HeavyLightDecomposition {
 private:
     void dfs_sz(ll v) {
@@ -147,96 +149,76 @@ public:
     }
 };
 
+typedef struct {
+    ll value;
+    ll length;
+} S;
 
+using F = ll;
+ll ID = 1e9+7;
 
+S op(S a, S b){
+    return {a.value + b.value, a.length + b.length};
+}
 
-struct AddLazySegmentTree {
-private:
-    ll n;
-    vector<ll> node, lazy;
+S mapping(F f, S a){
+    if(f == ID){
+        return a;
+    }
+    return {f, a.length};
+}
 
-public:
-    AddLazySegmentTree(vector<ll> v) {
-        ll sz = (ll)v.size();
-        n = 1; while(n < sz) n *= 2;
-        node.resize(2*n-1);
-        lazy.resize(2*n-1, 0);
+F composition(F f, F g){ // (f・g)(x) = f(g(x))
+    if(f == ID){
+        return g;
+    }
+    return f;
+}
 
-        for(ll i=0; i<sz; i++) node[i+n-1] = v[i];
-        for(ll i=n-2; i>=0; i--) node[i] = node[i*2+1] + node[i*2+2];
+S e(){
+    return {0,0};
+}
+
+F id(){
+    return ID;
+}
+
+void solve(){
+    ll N,Q;
+    cin >> N >> Q;
+    HeavyLightDecomposition hld(N);
+    vll a(N), b(N);
+    rep(i,0,N-1){
+        cin >> a[i] >> b[i];
+        a[i]--; b[i]--;
+        hld.add_edge(a[i], b[i]);
     }
 
-    void eval(ll k, ll l, ll r) {
-        if(lazy[k] != 0) {
-            node[k] += lazy[k];
-            if(r - l > 1) {
-                lazy[2*k+1] += lazy[k] / 2;
-                lazy[2*k+2] += lazy[k] / 2;
-            }
-            lazy[k] = 0;
-        }
+    hld.build();
+    vector<S> v(N, {0, 1});
+    lazy_segtree<S, op, e, F, mapping, composition, id> sg(v);
+
+    while(Q--){
+        ll u,v,c;
+        cin >> u >> v >> c;
+        u--; v--;
+        hld.for_each_edge(u, v, [&](ll x, ll y){
+            sg.apply(x, y, c);
+        });
+    }
+    rep(i,0,N){
+        hld.for_each_edge(a[i], b[i], [&](ll x, ll y){
+            ll res = sg.get(x).value;
+            print(res);
+        });
     }
 
-    void add(ll a, ll b, ll x, ll k=0, ll l=0, ll r=-1) {
-        if(r < 0) r = n;
-        eval(k, l, r);
-        if(b <= l || r <= a) return;
-        if(a <= l && r <= b) {
-            lazy[k] += (r - l) * x;
-            eval(k, l, r);
-        }
-        else {
-            add(a, b, x, 2*k+1, l, (l+r)/2);
-            add(a, b, x, 2*k+2, (l+r)/2, r);
-            node[k] = node[2*k+1] + node[2*k+2];
-        }
-    }
+    
 
-    ll getsum(ll a, ll b, ll k=0, ll l=0, ll r=-1) {
-        if(r < 0) r = n;
-        eval(k, l, r);
-        if(b <= l || r <= a) return 0;
-        if(a <= l && r <= b) return node[k];
-        ll vl = getsum(a, b, 2*k+1, l, (l+r)/2);
-        ll vr = getsum(a, b, 2*k+2, (l+r)/2, r);
-        return vl + vr;
-    }
-};
+}
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll N;
-    cin >> N;
-    HeavyLightDecomposition hld(N);
-    rep(i,0,N-1){
-        ll u,v;
-        cin >> u >> v;
-        u--; v--;
-        hld.add_edge(u,v);
-    }
-    hld.build();
-    ll Q;
-    cin >> Q;
-    vector<ll> v(N,0);
-    AddLazySegmentTree sg(v);
-
-    while(Q--){
-        ll a,b;
-        cin >> a >> b;
-        a--; b--;
-        auto q = hld.query(a,b);
-        for(auto &e: q){
-            sg.add(e.first, e.second, 1);
-        }
-    }
-
-    ll ans = 0;
-    rep(i,0,N){
-        ll r = sg.getsum(i,i+1);
-        ans += r * (r+1) / 2;
-    }
-    print(ans);
-    
-
+    solve();
 }

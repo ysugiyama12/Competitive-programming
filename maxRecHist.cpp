@@ -3,11 +3,11 @@
 // #include <atcoder/all>
 // using namespace atcoder;
 using namespace std;
-using ll = int;
+using ll = long long;
 using lpair = pair<ll, ll>;
 using vll = vector<ll>;
 const ll MOD = 1e9+7;
-// const ll INF = 1e18;
+const ll INF = 1e18;
 #define rep(i,m,n) for(ll i=(m);i<(n);i++)
 #define rrep(i,m,n) for(ll i=(m);i>=(n);i--)
 ostream& operator<<(ostream& os, lpair& h){ os << "(" << h.first << ", " << h.second << ")"; return os;}
@@ -15,30 +15,37 @@ ostream& operator<<(ostream& os, lpair& h){ os << "(" << h.first << ", " << h.se
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
-vector<vll> dp;
 
 void solve(){
     ll N;
     cin >> N;
-    ll M = N*N;
-    dp.assign(1LL<<M, vll(M, 0));
-    dp[1][0] = 1;
-    rep(bit,0,(1LL<<M)){
-        print()
-        rep(cur,0,M){
-            rep(nxt,0,M){
-                if(bit & (1LL<<nxt)) continue;
-                ll ch = cur/N, cw = cur%N;
-                ll nh = nxt/N, nw = nxt%N;
-                if((ch == nh && abs(cw - nw) == 1) || (cw == nw && abs(ch - nh) == 1)){
-                    dp[bit | (1LL<<nxt)][nxt] += dp[bit][cur];
+    vll a(N+1,0);
+    rep(i,0,N) cin >> a[i];
+    typedef struct{ll h, idx;} P;
+    stack<P> st;
+    ll ans = 0;
+    rep(i,0,N+1){
+        if(st.empty()){
+            st.push({a[i], i});
+        }else{
+            P v = st.top();
+            if(v.h < a[i]){
+                st.push({a[i], i});
+            }else if(v.h > a[i]){
+                ll target = i;
+                while(not st.empty()){
+                    P l1 = st.top();
+                    if(l1.h >= a[i]){
+                        st.pop();
+                        ans = max(ans, l1.h * (i - l1.idx));
+                        target = l1.idx;
+                    }else{
+                        break;
+                    }
                 }
+                st.push({a[i], target});
             }
         }
-    }
-    ll ans = 0;
-    rep(bit,0,1LL<<M){
-        ans += dp[bit][M-1];
     }
     print(ans);
     

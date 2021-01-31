@@ -3,6 +3,7 @@
 using namespace std;
 typedef long long ll;
 typedef pair<ll, ll> lpair;
+using vll = vector<ll>;
 const ll MOD = 1e9 + 7;
 const ll INF = 1e18;
 #define rep(i,m,n) for(ll i = (m); i < (n); i++)
@@ -13,9 +14,7 @@ const ll INF = 1e18;
 struct UnionFind {
 private:
     ll N;
-    vector<ll> parent;
-    vector<ll> num;
-    vector<ll> diff_weight;
+    vll parent, num, diff_weight;
 
 public:
     UnionFind(ll n){
@@ -40,7 +39,11 @@ public:
         w += weight(a); w -= weight(b);
         a = root(a); b = root(b);
         if(a == b) return;
-        parent[b] = a;
+        if(sz(a) <= sz(b)){
+            parent[a] = b;
+        }else{
+            parent[b] = a;
+        }
         ll sum = num[a] + num[b];
         num[a] = sum;
         num[b] = sum;
