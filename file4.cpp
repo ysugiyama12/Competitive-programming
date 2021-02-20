@@ -20,11 +20,11 @@ template<class T>bool chmin(T &a, const T &b) { if (b<a) { a=b; return 1; } retu
 
 void solve(){
     
+
 }
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
     solve();
-}   
-_
+}
