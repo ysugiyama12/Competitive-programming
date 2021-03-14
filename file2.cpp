@@ -17,70 +17,46 @@ template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
 template<class T>bool chmin(T &a, const T &b) { if (b<a) { a=b; return 1; } return 0; }
+class xor_set{
+private:
+    vll w;
+public:
+    xor_set () {}
+    void insert(ll x){
+        for(ll v : w) if(v & -v & x) x ^= v;
+        if(x == 0) return;
+        for(ll& v : w) if(x & -x & v) v ^= x;
+        w.push_back(x);
+    }
+ 
+    bool contain(ll x){
+        for(ll v : w) if(v & -v & x) x ^= v;
+        if(x == 0) return true;
+        return false;
+    }
+};
 
 void solve(){
     ll N;
     cin >> N;
-    vll m(N);
-    vector<string> a(N), b(N);
-    rep(i,0,N){
-        cin >> a[i] >> m[i] >> b[i];
-    }
-    map<string, ll> idx;
-    map<ll, string> inv;
-    vector<vector<lpair> > tree(N*2+10);
-    ll cur = 1;
-    rep(i,0,N){
-        if(idx[a[i]] == 0){
-            idx[a[i]] = cur;
-            inv[cur] = a[i];
-            cur++;
-        }
-        if(idx[b[i]] == 0){
-            idx[b[i]] = cur;
-            inv[cur] = b[i];
-            cur++;
-        }
-        tree[idx[a[i]]].push_back({idx[b[i]], m[i]});
-    }
+    vll a(N);
+    rep(i,0,N) cin >> a[i];
+    string S;
+    cin >> S;
+    vector<map<ll,bool> > dp(N+1);
+    xor_set xs;
 
-    ll M = cur;
-    vector<bool> visit(M+1, false);
-
-    vector<vll> res(M+1, vll(M+1, -1));
-
-    auto dfs = [&](auto dfs, ll cur, ll st, ll dst, ll val) -> void {
-        // print(cur);
-        if(visit[cur]) return;
-        visit[cur] = true;
-        if(cur == dst){
-            res[st][dst] = val; 
-        }
-        for(auto &e: tree[cur]){
-            if(not visit[e.first]) dfs(dfs, e.first, st, dst, val * e.second);
-        }
-    };
-
-    rep(i,1,M){
-        rep(j,1,M){
-            if(i == j) continue;
-            visit.assign(M+1, false);
-            dfs(dfs, i, i, j, 1);
-        }
-    }
-    ll max_val = 0;
-    lpair pos;
-    rep(i,1,M){
-        rep(j,1,M){
-            if(i == j) continue;
-            if(chmax(max_val, res[i][j])){
-                pos = {i,j};
+    rrep(i,N-1,0){
+        if(S[i] == '0'){
+            xs.insert(a[i]);
+        }else{
+            if(not xs.contain(a[i])){
+                print(1);
+                return;
             }
         }
     }
-    cout << "1" << inv[pos.first] << "=" << max_val << inv[pos.second] << endl;
-
-
+    print(0);
     
 
 }
@@ -88,5 +64,7 @@ void solve(){
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    solve();
+    ll t;
+    cin >> t;
+    while(t--) solve();
 }

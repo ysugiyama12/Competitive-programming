@@ -16,6 +16,19 @@ void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 
+ll modinv(ll a, ll m) {
+    assert(gcd(a,m) == 1);
+    ll b = m, u = 1, v = 0;
+    while (b > 0) {
+        ll t = a / b;
+        a -= t * b; swap(a, b);
+        u -= t * v; swap(u, v);
+    }
+    u %= m; 
+    if (u < 0) u += m;
+    return u;
+}
+
 struct Combination{
 private:
     ll N;
