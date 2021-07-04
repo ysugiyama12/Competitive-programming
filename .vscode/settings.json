@@ -87,7 +87,8 @@
         "typeinfo": "cpp",
         "bit": "cpp",
         "filesystem": "cpp",
-        "all": "cpp"
+        "all": "cpp",
+        "numbers": "cpp"
     },
     "C_Cpp.intelliSenseCacheSize": 0,
     "C_Cpp.errorSquiggles": "Disabled"

@@ -17,54 +17,51 @@ template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
 template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
 template<class T>bool chmin(T &a, const T &b) { if (b<a) { a=b; return 1; } return 0; }
-class xor_set{
-private:
-    vll w;
-public:
-    xor_set () {}
-    void insert(ll x){
-        for(ll v : w) if(v & -v & x) x ^= v;
-        if(x == 0) return;
-        for(ll& v : w) if(x & -x & v) v ^= x;
-        w.push_back(x);
+ll extgcd(ll a,ll b,ll &x,ll &y){
+    if(b == 0){
+        x = 1; y = 0;
+        return a;
     }
- 
-    bool contain(ll x){
-        for(ll v : w) if(v & -v & x) x ^= v;
-        if(x == 0) return true;
-        return false;
+
+    ll d = extgcd(b, a % b, y, x);
+    y -= a / b * x;
+    return d;
+}
+
+vll divisor(ll M){
+    vll div;
+    for(ll i = 1; i * i <= M; i++){
+        if(M % i == 0){
+            div.push_back(i); if(i * i != M) div.push_back(M / i);
+        }
     }
-};
+    sort(div.begin(), div.end());
+    return div;
+}
+
 
 void solve(){
     ll N;
     cin >> N;
-    vll a(N);
-    rep(i,0,N) cin >> a[i];
-    string S;
-    cin >> S;
-    vector<map<ll,bool> > dp(N+1);
-    xor_set xs;
+    auto dd = divisor(2*N);
+    ll ans = INF;
+    for(auto &e: dd){
+        ll e2 = 2 * N / e;
+        if(gcd(e,e2) != 1 || e == 2*N) continue;
+        ll x,y;
+        extgcd(e, e2, x,y);
+        x *= -1;
+        x = (x % e2 + e2) % e2;
+        ll k = e * x;
+        chmin(ans, k); 
 
-    rrep(i,N-1,0){
-        if(S[i] == '0'){
-            xs.insert(a[i]);
-        }else{
-            if(not xs.contain(a[i])){
-                print(1);
-                return;
-            }
-        }
     }
-    print(0);
-    
+    print(ans);
 
 }
 
 int main(){
     cin.tie(0);
     ios::sync_with_stdio(false);
-    ll t;
-    cin >> t;
-    while(t--) solve();
+    solve();
 }

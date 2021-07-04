@@ -14,14 +14,15 @@ const ll INF = 1e18;
 void print() {}
 template <class H,class... T>
 void print(H&& h, T&&... t){cout<<h<<" \n"[sizeof...(t)==0];print(forward<T>(t)...);}
+// verify: https://atcoder.jp/contests/abc186/submissions/23946605
 
-ll extgcd(ll a,ll b,ll &x,ll &y){
+ll ext_gcd(ll a,ll b,ll &x,ll &y){
     if(b == 0){
         x = 1; y = 0;
         return a;
     }
 
-    ll d = extgcd(b, a % b, y, x);
+    ll d = ext_gcd(b, a % b, y, x);
     y -= a / b * x;
     return d;
 }
@@ -30,16 +31,17 @@ ll extgcd(ll a,ll b,ll &x,ll &y){
 void solve(){
     ll N,S,K;
     cin >> N >> S >> K;
-    ll g = gcd(N,K);
+    // Nx - Ky = S
+    ll g = gcd(N, K);
     if(S % g != 0){
         print(-1);
         return;
     }
-    N /= g; K /= g; S /= g;
-    ll x0, y0;
-    extgcd(N, K, x0, y0);
-    x0 *= S; y0 *= S;
-    ll y = abs((y0 % N + N) % N - N);
+    ll x,y;
+    ext_gcd(N,K,x,y);
+    x *= S / g;
+    y *= -S / g;
+    y = (y%(N/g) + (N/g)) % (N/g);
     print(y);
 }
 

@@ -1,219 +1,235 @@
 {
     "base code of c++": {
-        "prefix": "_base",
-        "description": "c++ base code for competitive programming",
-        "body": [
-            "/*** author: yuji9511 ***/",
-            "#include <bits/stdc++.h>",
-            "// #include <atcoder/all>",
-            "// using namespace atcoder;",
-            "using namespace std;",
-            "using ll = long long;",
-            "using lpair = pair<ll, ll>;",
-            "using vll = vector<ll>;",
-            "const ll MOD = 1e9+7;",
-            "const ll INF = 1e18;",
-            "#define rep(i,m,n) for(ll i=(m);i<(n);i++)",
-            "#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)",
-            "ostream& operator<<(ostream& os, lpair& h){ os << \"(\" << h.first << \", \" << h.second << \")\"; return os;}",
-            "#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<\" \\n\"[i==n-1];};",
-            "void print() {}",
-            "template <class H,class... T>",
-            "void print(H&& h, T&&... t){cout<<h<<\" \\n\"[sizeof...(t)==0];print(forward<T>(t)...);}",
-            "template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }",
-            "template<class T>bool chmin(T &a, const T &b) { if (b<a) { a=b; return 1; } return 0; }",
-            "",
-            "void solve(){",
-            "\t$1",
-            "",
-            "}",
-            "",
-            "int main(){",
-            "\tcin.tie(0);",
-            "\tios::sync_with_stdio(false);",
-            "\tsolve();",
-            "}"
-        ]
+      "prefix": "_base",
+      "description": "c++ base code for competitive programming",
+      "body": [
+        "/*** author: yuji9511 ***/",
+        "#include <bits/stdc++.h>",
+        "// #include <atcoder/all>",
+        "// using namespace atcoder;",
+        "using namespace std;",
+        "using ll = long long;",
+        "using lpair = pair<ll, ll>;",
+        "using vll = vector<ll>;",
+        "const ll MOD = 1e9+7;",
+        "const ll INF = 1e18;",
+        "#define rep(i,m,n) for(ll i=(m);i<(n);i++)",
+        "#define rrep(i,m,n) for(ll i=(m);i>=(n);i--)",
+        "ostream& operator<<(ostream& os, lpair& h){ os << \"(\" << h.first << \", \" << h.second << \")\"; return os;}",
+        "#define printa(x,n) for(ll i=0;i<n;i++){cout<<(x[i])<<\" \\n\"[i==n-1];};",
+        "void print() {}",
+        "template <class H,class... T>",
+        "void print(H&& h, T&&... t){cout<<h<<\" \\n\"[sizeof...(t)==0];print(forward<T>(t)...);}",
+        "template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }",
+        "template<class T>bool chmin(T &a, const T &b) { if (b<a) { a=b; return 1; } return 0; }",
+        "",
+        "void solve(){",
+        "\t$1",
+        "",
+        "}",
+        "",
+        "int main(){",
+        "\tcin.tie(0);",
+        "\tios::sync_with_stdio(false);",
+        "\tsolve();",
+        "}"
+      ]
     },
     "power": {
-        "prefix": "_power",
-        "description": "",
-        "body": [
-            "ll power(ll x, ll n, ll m = MOD){",
-            "    if(n == 0) return 1LL;",
-            "    ll res = power(x * x % m, n/2, m);",
-            "    if(n % 2 == 1) (res *= x) %= m;",
-            "    return res;",
-            "}",
-            ""
-        ]
+      "prefix": "_power",
+      "description": "",
+      "body": [
+        "ll power(ll x, ll n, ll m = MOD){",
+        "    if(n == 0) return 1LL;",
+        "    ll res = power(x * x % m, n/2, m);",
+        "    if(n % 2 == 1) (res *= x) %= m;",
+        "    return res;",
+        "}",
+        ""
+      ]
     },
     "_fill": {
-        "prefix": "_fill",
-        "description": "",
-        "body": [
-            "template<typename A, size_t N, typename T>",
-            "void Fill(A (&array)[N], const T &val){",
-            "    std::fill( (T*)array, (T*)(array+N), val );",
-            "}",
-            ""
-        ]
+      "prefix": "_fill",
+      "description": "",
+      "body": [
+        "template<typename A, size_t N, typename T>",
+        "void Fill(A (&array)[N], const T &val){",
+        "    std::fill( (T*)array, (T*)(array+N), val );",
+        "}",
+        ""
+      ]
     },
     "_2d": {
-        "prefix": "_2d",
-        "description": "",
-        "body": [
-            "void vis_2d(vector< vector<ll> > v, ll h, ll w, ll pad=4){",
-            "    cout <<  \"ij \"; rep(i,0,w) cout << left << setw(pad) << i; cout << endl;",
-            "    rep(i,0,h){",
-            "        cout << i << \": \";",
-            "        rep(j,0,w){ if(v[i][j] == INF) cout << \"x\" << string(pad-1, ' '); else cout << left << setw(pad) << v[i][j]; }",
-            "        cout << endl;",
-            "    }",
-            "}"
-        ]
+      "prefix": "_2d",
+      "description": "",
+      "body": [
+        "void vis_2d(vector< vector<ll> > v, ll h, ll w, ll pad=4){",
+        "    cout <<  \"ij \"; rep(i,0,w) cout << left << setw(pad) << i; cout << endl;",
+        "    rep(i,0,h){",
+        "        cout << i << \": \";",
+        "        rep(j,0,w){ if(v[i][j] == INF) cout << \"x\" << string(pad-1, ' '); else cout << left << setw(pad) << v[i][j]; }",
+        "        cout << endl;",
+        "    }",
+        "}"
+      ]
     },
     "_dfs": {
-        "prefix": "_dfs",
-        "description": "",
-        "body": [
-            "auto dfs = [&](auto dfs, ll cur, ll par) -> void {",
-            "    for(auto &e: tree[cur]){",
-            "        if(e == par) continue;",
-            "        dfs(dfs, e, cur);",
-            "    }",
-            "};",
-            "dfs(dfs, 0, -1);"
-        ]
+      "prefix": "_dfs",
+      "description": "",
+      "body": [
+        "auto dfs = [&](auto dfs, ll cur, ll par) -> void {",
+        "    for(auto &e: tree[cur]){",
+        "        if(e == par) continue;",
+        "        dfs(dfs, e, cur);",
+        "    }",
+        "};",
+        "dfs(dfs, 0, -1);"
+      ]
     },
     "_div": {
-        "prefix": "_div",
-        "description": "",
-        "body": [
-            "vll divisor(ll M){",
-            "    vll div;",
-            "    for(ll i = 1; i * i <= M; i++){",
-            "        if(M % i == 0){",
-            "            div.push_back(i); if(i * i != M) div.push_back(M / i);",
-            "        }",
-            "    }",
-            "    sort(div.begin(), div.end());",
-            "    return div;",
-            "}",
-            ""
-        ]
+      "prefix": "_div",
+      "description": "",
+      "body": [
+        "vll divisor(ll M){",
+        "    vll div;",
+        "    for(ll i = 1; i * i <= M; i++){",
+        "        if(M % i == 0){",
+        "            div.push_back(i); if(i * i != M) div.push_back(M / i);",
+        "        }",
+        "    }",
+        "    sort(div.begin(), div.end());",
+        "    return div;",
+        "}",
+        ""
+      ]
     },
     "_fac": {
-        "prefix": "_fac",
-        "description": "",
-        "body": [
-            "vll factor(ll M){",
-            "    vll fac;",
-            "    if(M == 1){",
-            "        fac.push_back(1); return fac;",
-            "    }",
-            "    for(ll i = 2; i*i <= M; i++){",
-            "        while(M % i == 0){",
-            "            fac.push_back(i); M /= i;",
-            "        }",
-            "    }",
-            "    if(M != 1) fac.push_back(M);",
-            "    sort(fac.begin(), fac.end());",
-            "    return fac;",
-            "}",
-            ""
-        ]
+      "prefix": "_fac",
+      "description": "",
+      "body": [
+        "vll factor(ll M){",
+        "    vll fac;",
+        "    if(M == 1){",
+        "        fac.push_back(1); return fac;",
+        "    }",
+        "    for(ll i = 2; i*i <= M; i++){",
+        "        while(M % i == 0){",
+        "            fac.push_back(i); M /= i;",
+        "        }",
+        "    }",
+        "    if(M != 1) fac.push_back(M);",
+        "    sort(fac.begin(), fac.end());",
+        "    return fac;",
+        "}",
+        ""
+      ]
     },
     "_grid": {
-        "prefix": "_grid",
-        "description": "",
-        "body": [
-            "ll dh[4] = {0,0,1,-1};",
-            "ll dw[4] = {1,-1,0,0};",
-            "typedef struct{ll h,w;} P;",
-            "queue<P> que;",
-            "que.push({0,0});",
-            "",
-            "while(not que.empty()){",
-            "    P p = que.front();",
-            "    que.pop();",
-            "    rep(k,0,4){",
-            "        ll nh = p.h + dh[k], nw = p.w + dw[k];",
-            "        if(nh >= 0 && nh < H && nw >= 0 && nw < W){",
-            "        }",
-            "    }",
-            "}"
-        ]
+      "prefix": "_grid",
+      "description": "",
+      "body": [
+        "ll dh[4] = {0,0,1,-1};",
+        "ll dw[4] = {1,-1,0,0};",
+        "typedef struct{ll h,w;} P;",
+        "queue<P> que;",
+        "que.push({0,0});",
+        "",
+        "while(not que.empty()){",
+        "    P p = que.front();",
+        "    que.pop();",
+        "    rep(k,0,4){",
+        "        ll nh = p.h + dh[k], nw = p.w + dw[k];",
+        "        if(nh >= 0 && nh < H && nw >= 0 && nw < W){",
+        "        }",
+        "    }",
+        "}"
+      ]
     },
     "_lseg": {
-        "prefix": "_lseg",
-        "description": "",
-        "body": [
-            "// Configuration of lazy segtree (range add, range sum)",
-            "typedef struct {",
-            "    ll value;",
-            "    ll length;",
-            "} S;",
-            "using F = ll;",
-            "S op(S a, S b){",
-            "    return {a.value + b.value, a.length + b.length};",
-            "}",
-            "S mapping(F f, S a){",
-            "    return {a.value + f * a.length, a.length};",
-            "}",
-            "F composition(F f, F g){ // (f・g)(x) = f(g(x))",
-            "    return f + g;",
-            "}",
-            "S e(){",
-            "    return {0,0};",
-            "}",
-            "F id(){",
-            "    return 0LL;",
-            "}",
-            ""
-        ]
+      "prefix": "_lseg",
+      "description": "",
+      "body": [
+        "// Configuration of lazy segtree (range add, range sum)",
+        "typedef struct {",
+        "    ll value;",
+        "    ll length;",
+        "} S;",
+        "using F = ll;",
+        "S op(S a, S b){",
+        "    return {a.value + b.value, a.length + b.length};",
+        "}",
+        "S mapping(F f, S a){",
+        "    return {a.value + f * a.length, a.length};",
+        "}",
+        "F composition(F f, F g){ // (f・g)(x) = f(g(x))",
+        "    return f + g;",
+        "}",
+        "S e(){",
+        "    return {0,0};",
+        "}",
+        "F id(){",
+        "    return 0LL;",
+        "}",
+        ""
+      ]
     },
     "get_unique": {
-        "prefix": "_get_unique",
-        "description": "",
-        "body": [
-            "void get_unique(vll &v){",
-            "    sort(v.begin(), v.end());",
-            "    v.erase(unique(v.begin(),v.end()), v.end());",
-            "}"
-        ]
+      "prefix": "_get_unique",
+      "description": "",
+      "body": [
+        "void get_unique(vll &v){",
+        "    sort(v.begin(), v.end());",
+        "    v.erase(unique(v.begin(),v.end()), v.end());",
+        "}"
+      ]
     },
     "_compress": {
-        "prefix": "_compress",
-        "description": "",
-        "body": [
-            "vll compress(vll x){",
-            "\tvll v = x;",
-            "    v.push_back(-INF);",
-            "    v.push_back(INF);",
-            "    sort(v.begin(), v.end());",
-            "    v.erase(unique(v.begin(), v.end()), v.end());",
-            "    vll res;",
-            "    for(auto &e: x){",
-            "        res.push_back(lower_bound(v.begin(), v.end(), e) - v.begin());",
-            "    }",
-            "    return res;",
-            "}"
-        ]
+      "prefix": "_compress",
+      "description": "",
+      "body": [
+        "vll compress(vll x){",
+        "\tvll v = x;",
+        "    v.push_back(-INF);",
+        "    v.push_back(INF);",
+        "    sort(v.begin(), v.end());",
+        "    v.erase(unique(v.begin(), v.end()), v.end());",
+        "    vll res;",
+        "    for(auto &e: x){",
+        "        res.push_back(lower_bound(v.begin(), v.end(), e) - v.begin());",
+        "    }",
+        "    return res;",
+        "}"
+      ]
     },
     "_pq": {
-        "prefix": "_pq",
-        "description": "",
-        "body": [
-            "priority_queue pq([](lpair l1, lpair l2){return l1 < l2;}, vector<lpair>());"
-        ]
+      "prefix": "_pq",
+      "description": "",
+      "body": [
+        "priority_queue pq([](lpair l1, lpair l2){return l1 < l2;}, vector<lpair>());"
+      ]
     },
     "cpp_int": {
-        "prefix": "_cpp_int",
-        "description": "",
-        "body": [
-            "#include <boost/multiprecision/cpp_int.hpp>",
-            "using bint = boost::multiprecision::cpp_int;"
-        ]
+      "prefix": "_cpp_int",
+      "description": "",
+      "body": [
+        "#include <boost/multiprecision/cpp_int.hpp>",
+        "using bint = boost::multiprecision::cpp_int;"
+      ]
+    },
+    "_ext_gcd": {
+      "prefix": "_ext_gcd",
+      "description": "",
+      "body": [
+        "ll ext_gcd(ll a,ll b,ll &x,ll &y){",
+        "    if(b == 0){",
+        "        x = 1; y = 0;",
+        "        return a;",
+        "    }",
+        "",
+        "    ll d = ext_gcd(b, a % b, y, x);",
+        "    y -= a / b * x;",
+        "    return d;",
+        "}"
+      ]
     }
-}
+  }
